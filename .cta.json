@@ -1,0 +1,30 @@
+{
+  "initialized": true,
+  "mode": "file-router",
+  "projectName": "pabfc-portal",
+  "typescript": true,
+  "tailwind": true,
+  "git": true,
+  "addOnOptions": {
+    "drizzle": {
+      "database": "postgresql"
+    }
+  },
+  "packageManager": "pnpm",
+  "install": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "compiler",
+    "drizzle",
+    "form",
+    "shadcn",
+    "t3env",
+    "table",
+    "better-auth",
+    "start",
+    "tanstack-query",
+    "biome",
+    "nitro"
+  ]
+}
