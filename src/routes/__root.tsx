@@ -8,6 +8,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Toaster } from "react-hot-toast";
 import type { BreadcrumbValue } from "@/components/router-breadcrumb";
+import { ThemeProvider } from "@/integrations/theme/theme-provider";
 import { authQueries } from "@/lib/session/queries";
 import type { getRouter } from "@/router";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
@@ -83,7 +84,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				{children}
+				<ThemeProvider>{children}</ThemeProvider>
 				<Toaster
 					position="top-center"
 					toastOptions={{
