@@ -6,12 +6,24 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Toaster } from "react-hot-toast";
+import type { BreadcrumbValue } from "@/components/router-breadcrumb";
 import { authQueries } from "@/lib/session/queries";
+import type { getRouter } from "@/router";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
+}
+
+declare module "@tanstack/react-router" {
+	interface Register {
+		router: ReturnType<typeof getRouter>;
+	}
+	interface StaticDataRouteOption {
+		breadcrumb?: BreadcrumbValue;
+	}
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -22,7 +34,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 		return { userSession };
 	},
-	ssr: "data-only",
+	ssr: true,
 	head: () => ({
 		meta: [
 			{
@@ -72,6 +84,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				{children}
+				<Toaster
+					position="top-center"
+					toastOptions={{
+						className: "custom-toast",
+						duration: 5000,
+						removeDelay: 1000,
+					}}
+				/>
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",
