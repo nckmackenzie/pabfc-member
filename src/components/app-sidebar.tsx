@@ -113,10 +113,7 @@ export function AppSidebar({
 							{user.name.toLowerCase()}
 						</span>
 						<span className="text-xs text-muted-foreground">
-							Member Since{" "}
-							{user.createdAt.toLocaleDateString("en-KE", {
-								year: "numeric",
-							})}
+							Member Since {new Date(user.createdAt).getFullYear()}
 						</span>
 					</div>
 				</div>
