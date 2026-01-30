@@ -1,9 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/(protected)/dashboard')({
-  component: RouteComponent,
-})
+export const Route = createFileRoute("/(protected)/dashboard")({
+	staticData: {
+		breadcrumb: "Dashboard",
+	},
+	head: () => ({ meta: [{ title: "Dashboard / PABFC" }] }),
+	component: RouteComponent,
+});
 
 function RouteComponent() {
-  return <div>Hello "/(protected)/dashboard"!</div>
+	return <div>Dashboard</div>;
 }
