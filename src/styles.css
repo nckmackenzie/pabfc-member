@@ -130,7 +130,7 @@
 
   /* Accent: Vibrant Peach/Coral (Action/Energy) */
   --accent: oklch(0.75 0.18 45); /* Bright Coral */
-  --accent-foreground: oklch(0.12 0.04 265); /* Dark Text on Accent */
+  --accent-foreground: oklch(0.98 0.005 260); /* Dark Text on Accent */
 
   /* States & Borders */
   --destructive: oklch(0.70 0.19 22);
