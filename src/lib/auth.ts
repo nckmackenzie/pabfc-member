@@ -1,8 +1,11 @@
 import bcrypt from "bcryptjs";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { twoFactor, username } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { nanoid } from "nanoid";
+import { UAParser } from "ua-parser-js";
 import { db } from "@/db";
 import * as schema from "@/drizzle/schema";
 import { env } from "@/env/server";
@@ -19,7 +22,6 @@ export const auth = betterAuth({
 		},
 	}),
 	baseURL: env.VITE_BASE_URL,
-	experimental: { joins: true },
 	account: {
 		accountLinking: { enabled: true },
 	},
@@ -65,7 +67,7 @@ export const auth = betterAuth({
 		autoSignIn: true,
 		password: {
 			hash: async (password: string) => {
-				return await bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS));
+				return await bcrypt.hash(password, Number(env.BCRYPT_ROUNDS));
 			},
 			verify: async ({
 				hash,
@@ -79,4 +81,50 @@ export const auth = betterAuth({
 		},
 	},
 	plugins: [twoFactor(), username(), tanstackStartCookies()],
+	hooks: {
+		before: createAuthMiddleware(async (ctx) => {
+			if (!ctx.path.startsWith("/sign-in")) return;
+
+			const user = await db.query.users.findFirst({
+				columns: { id: true, username: true },
+				where: (users, { eq, or, and }) =>
+					and(
+						eq(users.role, "member"),
+						or(
+							eq(users.contact, ctx.body.username),
+							eq(users.email, ctx.body.username),
+							eq(users.username, ctx.body.username),
+						),
+					),
+			});
+
+			if (!user) {
+				throw new APIError("BAD_REQUEST", {
+					message: "Invalid username or password",
+				});
+			}
+
+			ctx.context.userId = user.id;
+		}),
+		after: createAuthMiddleware(async (ctx) => {
+			if (!ctx.path.startsWith("/sign-in")) return;
+			const userAgent = ctx.request?.headers?.get("user-agent") ?? "unknown";
+			const ipAddress =
+				ctx.request?.headers?.get("x-forwarded-for") ||
+				ctx.request?.headers?.get("x-real-ip") ||
+				"127.0.0.1";
+			const { browser } = UAParser(userAgent);
+
+			const success = Boolean(ctx.context.newSession);
+
+			await db.insert(schema.loginAttempts).values({
+				id: nanoid(),
+				userId: ctx.context.newSession?.user.id as string,
+				success,
+				ipAddress,
+				failureReason: success ? undefined : "Invalid username or password",
+				userAgent: browser.name || "",
+			});
+		}),
+	},
 });
