@@ -1,7 +1,12 @@
 import { useStore } from "@tanstack/react-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import {
+	Field,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import * as ShadcnSelect from "@/components/ui/select";
@@ -9,17 +14,31 @@ import { Slider as ShadcnSlider } from "@/components/ui/slider";
 import { Switch as ShadcnSwitch } from "@/components/ui/switch";
 import { Textarea as ShadcnTextarea } from "@/components/ui/textarea";
 import { useFieldContext, useFormContext } from "@/lib/form";
+import { cn } from "@/lib/utils";
 
-export function SubscribeButton({ label }: { label: string }) {
+export function SubscribeButton({
+	label,
+	className,
+}: {
+	label: string;
+	className?: string;
+}) {
 	const form = useFormContext();
 	return (
-		<form.Subscribe selector={(state) => state.isSubmitting}>
-			{(isSubmitting) => (
-				<Button type="submit" disabled={isSubmitting} size="lg">
-					{label}
-				</Button>
-			)}
-		</form.Subscribe>
+		<FieldGroup className="items-start">
+			<form.Subscribe selector={(state) => state.isSubmitting}>
+				{(isSubmitting) => (
+					<Button
+						type="submit"
+						disabled={isSubmitting}
+						size="lg"
+						className={cn("", className)}
+					>
+						{label}
+					</Button>
+				)}
+			</form.Subscribe>
+		</FieldGroup>
 	);
 }
 
