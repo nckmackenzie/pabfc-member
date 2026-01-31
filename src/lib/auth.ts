@@ -9,6 +9,7 @@ import { UAParser } from "ua-parser-js";
 import { db } from "@/db";
 import * as schema from "@/drizzle/schema";
 import { env } from "@/env/server";
+import { sendEmailVerificationEmail } from "@/lib/emails/emails.api";
 
 export const auth = betterAuth({
 	database: drizzleAdapter(db, {
@@ -34,6 +35,14 @@ export const auth = betterAuth({
 		},
 	},
 	user: {
+		changeEmail: {
+			enabled: true,
+			sendChangeEmailConfirmation: async ({ user, url, newEmail }) => {
+				await sendEmailVerificationEmail({
+					data: { email: newEmail, url, name: user.name },
+				});
+			},
+		},
 		additionalFields: {
 			contact: {
 				type: "string",
@@ -65,6 +74,7 @@ export const auth = betterAuth({
 		enabled: true,
 		minPasswordLength: 8,
 		autoSignIn: true,
+		requireEmailVerification: true,
 		password: {
 			hash: async (password: string) => {
 				return await bcrypt.hash(password, Number(env.BCRYPT_ROUNDS));
@@ -78,6 +88,15 @@ export const auth = betterAuth({
 			}) => {
 				return await bcrypt.compare(password, hash);
 			},
+		},
+	},
+	emailVerification: {
+		autoSignInAfterVerification: true,
+		sendOnSignUp: true,
+		sendVerificationEmail: async ({ user, url }) => {
+			await sendEmailVerificationEmail({
+				data: { email: user.email, url, name: user.name },
+			});
 		},
 	},
 	plugins: [twoFactor(), username(), tanstackStartCookies()],
