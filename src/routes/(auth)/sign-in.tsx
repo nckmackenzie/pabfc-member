@@ -16,6 +16,9 @@ export const Route = createFileRoute("/(auth)/sign-in")({
 	validateSearch: z.object({
 		redirectTo: z.string().optional().catch("/member/dashboard"),
 	}),
+	head: () => ({
+		meta: [{ title: "Sign In / Prime Age Beauty & Fitness Center" }],
+	}),
 });
 
 function RouteComponent() {
