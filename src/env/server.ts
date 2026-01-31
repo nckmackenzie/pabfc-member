@@ -23,6 +23,7 @@ export const env = createEnv({
 		AWS_BUCKET: z.string().min(1),
 		AWS_USE_PATH_STYLE_ENDPOINT: z.string().min(1),
 		AWS_S3_PUBLIC_URL: z.string().min(1),
+		RESEND_API_KEY: z.string().min(1),
 	},
 	runtimeEnv: process.env,
 });
