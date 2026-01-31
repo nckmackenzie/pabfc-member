@@ -80,7 +80,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 			</Link>
 			<FieldGroup>
 				<form.AppForm>
-					<form.SubscribeButton label="Login" />
+					<form.SubscribeButton label="Login" className="w-full" />
 				</form.AppForm>
 			</FieldGroup>
 			<FieldGroup>
