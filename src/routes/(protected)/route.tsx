@@ -16,7 +16,7 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useTheme } from "@/integrations/theme/theme-provider";
-import { getUserSession } from "@/lib/session/session.api";
+import { getMemberId, getUserSession } from "@/lib/session/session.api";
 
 export const Route = createFileRoute("/(protected)")({
 	beforeLoad: async ({ context, location }) => {
@@ -29,6 +29,7 @@ export const Route = createFileRoute("/(protected)")({
 		if (!userSession || userSession.user.role !== "member") {
 			throw redirect({ to: "/sign-in", search: { redirectTo: location.href } });
 		}
+		const memberId = await getMemberId({ data: userSession.user.id });
 		return {
 			user: {
 				name: userSession.user.name,
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/(protected)")({
 				email: userSession.user.email,
 				createdAt: userSession.user.createdAt,
 			},
+			memberId,
 		};
 	},
 	component: RouteComponent,
