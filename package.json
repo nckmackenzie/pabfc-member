@@ -19,6 +19,8 @@
     "ui": "pnpm dlx shadcn@latest"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.981.0",
+    "@aws-sdk/s3-request-presigner": "^3.981.0",
     "@faker-js/faker": "^10.0.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-collapsible": "^1.1.12",
@@ -51,6 +53,7 @@
     "@zxcvbn-ts/language-en": "^3.0.2",
     "bcryptjs": "^3.0.3",
     "better-auth": "^1.4.12",
+    "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-kit": "^0.31.8",
@@ -61,8 +64,10 @@
     "pg": "^8.16.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-dropzone": "^14.4.0",
     "react-email": "^5.2.5",
     "react-hot-toast": "^2.6.0",
+    "react-image-crop": "^11.0.10",
     "resend": "^6.9.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.6",
