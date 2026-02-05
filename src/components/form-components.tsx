@@ -1,5 +1,4 @@
 import { useStore } from "@tanstack/react-form";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -15,6 +14,7 @@ import { Switch as ShadcnSwitch } from "@/components/ui/switch";
 import { Textarea as ShadcnTextarea } from "@/components/ui/textarea";
 import { useFieldContext, useFormContext } from "@/lib/form";
 import { cn } from "@/lib/utils";
+import { PasswordInput } from "./ui/password-input";
 
 export function SubscribeButton({
 	label,
@@ -81,31 +81,18 @@ export function PasswordTextField({
 	const field = useFieldContext<string>();
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 	const errors = useStore(field.store, (state) => state.meta.errors);
-	const [showPassword, setShowPassword] = useState(false);
 
 	return (
 		<Field data-invalid={isInvalid}>
-			<div className="flex items-center justify-between">
-				<FieldLabel htmlFor={label}>{label}</FieldLabel>
-				<Button
-					type="button"
-					variant="ghost"
-					size="sm"
-					onClick={() => setShowPassword(!showPassword)}
-					className="py-0.5! text-xs! h-auto text-muted-foreground"
-				>
-					{showPassword ? "Hide Password" : "Show Password"}
-				</Button>
-			</div>
+			<FieldLabel htmlFor={label}>{label}</FieldLabel>
 
-			<Input
+			<PasswordInput
 				value={field.state.value}
 				placeholder={placeholder}
 				onBlur={field.handleBlur}
 				onChange={(e) => field.handleChange(e.target.value)}
 				id={field.name}
 				aria-invalid={isInvalid}
-				type={showPassword ? "text" : "password"}
 			/>
 
 			{field.state.meta.isTouched && <FieldError errors={errors} />}
