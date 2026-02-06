@@ -48,7 +48,6 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 			provider: "google",
 			fetchOptions: {
 				onError: (error) => {
-					console.error(error);
 					toast.error((t) => (
 						<ToastContent
 							message={error.error.message ?? "An unknown error occurred"}
