@@ -8,7 +8,13 @@ export const getUserInformation = createServerFn()
 	.middleware([authMiddleware])
 	.handler(async ({ context }) => {
 		const user = await db.query.users.findFirst({
-			columns: { name: true, image: true, email: true, contact: true },
+			columns: {
+				name: true,
+				image: true,
+				email: true,
+				contact: true,
+				twoFactorEnabled: true,
+			},
 			where: eq(users.id, context.user.id),
 		});
 
