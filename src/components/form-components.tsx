@@ -113,16 +113,13 @@ export function InputOtp() {
 			maxLength={6}
 			value={field.state.value}
 			onChange={field.handleChange}
+			autoFocus
 		>
 			<InputOTPGroup>
 				<InputOTPSlot index={0} aria-invalid={isInvalid} />
 				<InputOTPSlot index={1} aria-invalid={isInvalid} />
-			</InputOTPGroup>
-			<InputOTPGroup>
 				<InputOTPSlot index={2} aria-invalid={isInvalid} />
 				<InputOTPSlot index={3} aria-invalid={isInvalid} />
-			</InputOTPGroup>
-			<InputOTPGroup>
 				<InputOTPSlot index={4} aria-invalid={isInvalid} />
 				<InputOTPSlot index={5} aria-invalid={isInvalid} />
 			</InputOTPGroup>
