@@ -8,20 +8,23 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 import * as ShadcnSelect from "@/components/ui/select";
 import { Slider as ShadcnSlider } from "@/components/ui/slider";
 import { Switch as ShadcnSwitch } from "@/components/ui/switch";
 import { Textarea as ShadcnTextarea } from "@/components/ui/textarea";
 import { useFieldContext, useFormContext } from "@/lib/form";
 import { cn } from "@/lib/utils";
-import { PasswordInput } from "./ui/password-input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
 
 export function SubscribeButton({
 	label,
 	className,
+	variant,
 }: {
 	label: string;
 	className?: string;
+	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost";
 }) {
 	const form = useFormContext();
 	return (
@@ -33,6 +36,7 @@ export function SubscribeButton({
 						disabled={isSubmitting}
 						size="lg"
 						className={cn("", className)}
+						variant={variant || "default"}
 					>
 						{label}
 					</Button>
@@ -97,6 +101,32 @@ export function PasswordTextField({
 
 			{field.state.meta.isTouched && <FieldError errors={errors} />}
 		</Field>
+	);
+}
+
+export function InputOtp() {
+	const field = useFieldContext<string>();
+	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+	return (
+		<InputOTP
+			maxLength={6}
+			value={field.state.value}
+			onChange={field.handleChange}
+		>
+			<InputOTPGroup>
+				<InputOTPSlot index={0} aria-invalid={isInvalid} />
+				<InputOTPSlot index={1} aria-invalid={isInvalid} />
+			</InputOTPGroup>
+			<InputOTPGroup>
+				<InputOTPSlot index={2} aria-invalid={isInvalid} />
+				<InputOTPSlot index={3} aria-invalid={isInvalid} />
+			</InputOTPGroup>
+			<InputOTPGroup>
+				<InputOTPSlot index={4} aria-invalid={isInvalid} />
+				<InputOTPSlot index={5} aria-invalid={isInvalid} />
+			</InputOTPGroup>
+		</InputOTP>
 	);
 }
 
