@@ -12,7 +12,7 @@ export const authClient = createAuthClient({
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect: () => {
-				window.location.href = "/auth/2fa";
+				window.location.href = "/2fa";
 			},
 		}),
 		usernameClient(),
