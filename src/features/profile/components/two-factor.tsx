@@ -169,7 +169,6 @@ function QRCodeForm({
 		onSubmit: async ({ value }) => {
 			await authClient.twoFactor.verifyTotp({
 				code: value.code,
-				trustDevice: true,
 				fetchOptions: {
 					onSuccess: async () => {
 						setEnabled(true);
