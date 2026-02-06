@@ -20,6 +20,7 @@ export const auth = betterAuth({
 			accounts: schema.accounts,
 			sessions: schema.sessions,
 			verifications: schema.verifications,
+			twoFactors: schema.twoFactors,
 		},
 	}),
 	baseURL: env.VITE_BASE_URL,
@@ -105,6 +106,7 @@ export const auth = betterAuth({
 			});
 		},
 	},
+	appName: "PABFC",
 	plugins: [twoFactor(), username(), tanstackStartCookies()],
 	hooks: {
 		before: createAuthMiddleware(async (ctx) => {
