@@ -42,6 +42,30 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 			});
 		},
 	});
+
+	async function handleGoogleLogin() {
+		await authClient.signIn.social({
+			provider: "google",
+			fetchOptions: {
+				onError: (error) => {
+					console.error(error);
+					toast.error((t) => (
+						<ToastContent
+							message={error.error.message ?? "An unknown error occurred"}
+							title="Login Error"
+							t={t}
+						/>
+					));
+				},
+				onSuccess: async () => {
+					const target = sanitizeRedirect(redirectTo ?? previousLocation);
+					form.reset();
+					navigate({ to: target, replace: true });
+				},
+			},
+		});
+	}
+
 	return (
 		<form
 			onSubmit={(e) => {
@@ -91,7 +115,12 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 					</span>
 					<div className="grow border-t border-gray-300"></div>
 				</div>
-				<Button variant="outline" size="lg" disabled>
+				<Button
+					type="button"
+					variant="outline"
+					size="lg"
+					onClick={handleGoogleLogin}
+				>
 					<GoogleIcon />
 					Sign in with Google
 				</Button>
@@ -100,7 +129,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 	);
 }
 
-function GoogleIcon({ ...props }: React.ComponentProps<"svg">) {
+export function GoogleIcon({ ...props }: React.ComponentProps<"svg">) {
 	return (
 		<svg
 			{...props}

@@ -90,6 +90,12 @@ export const auth = betterAuth({
 			},
 		},
 	},
+	socialProviders: {
+		google: {
+			clientId: env.GOOGLE_CLIENT_ID,
+			clientSecret: env.GOOGLE_CLIENT_SECRET,
+		},
+	},
 	emailVerification: {
 		autoSignInAfterVerification: true,
 		sendOnSignUp: true,
@@ -102,7 +108,8 @@ export const auth = betterAuth({
 	plugins: [twoFactor(), username(), tanstackStartCookies()],
 	hooks: {
 		before: createAuthMiddleware(async (ctx) => {
-			if (!ctx.path.startsWith("/sign-in")) return;
+			if (!ctx.path.startsWith("/sign-in") || ctx.path === "/sign-in/social")
+				return;
 
 			const user = await db.query.users.findFirst({
 				columns: { id: true, username: true },
