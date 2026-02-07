@@ -10,17 +10,39 @@ export const editPersonalInfoSchema = z.object({
 });
 
 export const profileSearchValidate = z.object({
-	tab: z.enum(["personal", "security", "account"]).default("personal"),
-})
+	tab: z
+		.enum(["personal", "security", "account", "sessions"])
+		.catch("personal"),
+});
 
-export const changePasswordSchema = z.object({
-	currentPassword: z.string().min(1, "Current password is required").refine((value) => value.length >= 6, "Current password must be at least 6 characters long"),
-	newPassword: z.string().min(1, "New password is required").refine((value) => value.length >= 6, "New password must be at least 6 characters long"),
-	confirmPassword: z.string().min(1, "Confirm password is required").refine((value) => value.length >= 6, "Confirm password must be at least 6 characters long"),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-	message: "Passwords do not match",
-	path: ["confirmPassword"],
-})
+export const changePasswordSchema = z
+	.object({
+		currentPassword: z
+			.string()
+			.min(1, "Current password is required")
+			.refine(
+				(value) => value.length >= 6,
+				"Current password must be at least 6 characters long",
+			),
+		newPassword: z
+			.string()
+			.min(1, "New password is required")
+			.refine(
+				(value) => value.length >= 6,
+				"New password must be at least 6 characters long",
+			),
+		confirmPassword: z
+			.string()
+			.min(1, "Confirm password is required")
+			.refine(
+				(value) => value.length >= 6,
+				"Confirm password must be at least 6 characters long",
+			),
+	})
+	.refine((data) => data.newPassword === data.confirmPassword, {
+		message: "Passwords do not match",
+		path: ["confirmPassword"],
+	});
 
 export type EditPersonalInfoSchema = z.infer<typeof editPersonalInfoSchema>;
 export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
