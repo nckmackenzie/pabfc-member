@@ -63,7 +63,7 @@ function RouteComponent() {
 			/>
 			<Tabs
 				defaultValue={filters.tab}
-				onValueChange={(tab) => {
+				onValueChange={(tab: string) => {
 					setFilters({ tab });
 				}}
 			>
