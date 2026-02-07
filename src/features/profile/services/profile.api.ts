@@ -9,3 +9,10 @@ export const getUserAccounts = createServerFn()
 		const request = getRequest();
 		return auth.api.listUserAccounts({ headers: request.headers });
 	});
+
+export const getActiveSessions = createServerFn()
+	.middleware([authMiddleware])
+	.handler(async () => {
+		const request = getRequest();
+		return auth.api.listSessions({ headers: request.headers });
+	});
