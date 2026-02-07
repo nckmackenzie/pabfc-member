@@ -85,7 +85,7 @@ export function AvatarUpload({
 	const hasChanges = !!preview;
 
 	return (
-		<div className="space-y-4">
+		<div className="space-y-4 max-w-lg">
 			<div
 				{...getRootProps()}
 				className={`
@@ -95,7 +95,7 @@ export function AvatarUpload({
 			>
 				<input {...getInputProps()} />
 
-				<div className="relative flex-shrink-0">
+				<div className="relative shrink-0">
 					<div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 border-2 border-gray-300 relative">
 						{displayImage ? (
 							<img
@@ -174,7 +174,7 @@ export function AvatarUpload({
 			{error && (
 				<div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-3">
 					<svg
-						className="w-5 h-5 flex-shrink-0 mt-0.5"
+						className="w-5 h-5 shrink-0 mt-0.5"
 						fill="currentColor"
 						viewBox="0 0 20 20"
 					>
@@ -190,7 +190,7 @@ export function AvatarUpload({
 
 			<div className="flex items-start gap-2 text-sm text-gray-600">
 				<svg
-					className="w-5 h-5 flex-shrink-0 mt-0.5"
+					className="w-5 h-5 shrink-0 mt-0.5"
 					fill="currentColor"
 					viewBox="0 0 20 20"
 				>
