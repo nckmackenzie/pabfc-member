@@ -3,6 +3,7 @@ import {
 	DownloadCloudIcon,
 	LinkIcon,
 	LockKeyholeIcon,
+	TabletSmartphoneIcon,
 	UserIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,9 +19,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AccountLinking } from "@/features/profile/components/account-linking";
 import { EditPersonalInfoForm } from "@/features/profile/components/edit-personal-info-form";
 import { SecurityForm } from "@/features/profile/components/security-form";
+import { SessionManagement } from "@/features/profile/components/session-management";
 import { TwoFactor } from "@/features/profile/components/two-factor";
 import { getUserInformation } from "@/features/profile/services/member.api";
-import { getUserAccounts } from "@/features/profile/services/profile.api";
+import {
+	getActiveSessions,
+	getUserAccounts,
+} from "@/features/profile/services/profile.api";
 import { profileSearchValidate } from "@/features/profile/services/schema";
 import { useFilters } from "@/hooks/use-filters";
 
@@ -32,12 +37,13 @@ export const Route = createFileRoute("/(protected)/profile/")({
 	head: () => ({ meta: [{ title: "Profile / PABFC" }] }),
 	component: RouteComponent,
 	loader: async () => {
-		const [userInfo, userAccounts] = await Promise.all([
+		const [userInfo, userAccounts, activeSessions] = await Promise.all([
 			getUserInformation(),
 			getUserAccounts(),
+			getActiveSessions(),
 		]);
 		if (!userInfo) throw redirect({ to: "/sign-in" });
-		return { userInfo, userAccounts };
+		return { userInfo, userAccounts, activeSessions };
 	},
 });
 
@@ -45,6 +51,7 @@ const TABS = [
 	{ value: "personal", label: "Personal Information", icon: UserIcon },
 	{ value: "security", label: "Security", icon: LockKeyholeIcon },
 	{ value: "account", label: "Account", icon: LinkIcon },
+	{ value: "sessions", label: "Sessions", icon: TabletSmartphoneIcon },
 ];
 
 function RouteComponent() {
@@ -96,6 +103,9 @@ function RouteComponent() {
 				</TabsContent>
 				<TabsContent value="account">
 					<AccountLinking />
+				</TabsContent>
+				<TabsContent value="sessions">
+					<SessionManagement />
 				</TabsContent>
 			</Tabs>
 		</div>
