@@ -70,6 +70,7 @@
     "react-dropzone": "^14.4.0",
     "react-email": "^5.2.5",
     "react-hot-toast": "^2.6.0",
+    "react-icons": "^5.5.0",
     "react-image-crop": "^11.0.10",
     "react-qr-code": "^2.0.18",
     "resend": "^6.9.1",
