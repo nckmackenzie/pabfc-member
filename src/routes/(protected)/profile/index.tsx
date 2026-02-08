@@ -15,6 +15,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AccountLinking } from "@/features/profile/components/account-linking";
 import { EditPersonalInfoForm } from "@/features/profile/components/edit-personal-info-form";
@@ -45,6 +46,7 @@ export const Route = createFileRoute("/(protected)/profile/")({
 		if (!userInfo) throw redirect({ to: "/sign-in" });
 		return { userInfo, userAccounts, activeSessions };
 	},
+	pendingComponent: PendingComponent,
 });
 
 const TABS = [
@@ -108,6 +110,19 @@ function RouteComponent() {
 					<SessionManagement />
 				</TabsContent>
 			</Tabs>
+		</div>
+	);
+}
+
+function PendingComponent() {
+	return (
+		<div className="space-y-6">
+			<PageHeader
+				title="User Profile"
+				description="Manage your personal information and security details"
+				content={<Skeleton className="h-10 w-40" />}
+			/>
+			<Skeleton className="h-10 w-96" />
 		</div>
 	);
 }
