@@ -53,6 +53,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-invert-foreground: var(--invert-foreground);
+  --color-invert: var(--invert);
+  --color-destructive-foreground: var(--destructive-foreground);
 }
 
 :root {
@@ -105,6 +108,9 @@
   --toast-foreground-success: oklch(0.43 0.09 167);
   --warning-foreground: oklch(0.47 0.12 46);
   --success-foreground: oklch(0.43 0.09 167);
+  --destructive-foreground: var(--color-red-800);
+  --invert: var(--color-zinc-900);
+  --invert-foreground: var(--color-zinc-50);
 }
 
 .dark {
@@ -169,6 +175,9 @@
   --toast-foreground-success: oklch(0.77 0.15 163);
   --warning-foreground: oklch(0.92 0.12 96);
   --success-foreground: oklch(0.9 0.09 164);
+  --destructive-foreground: var(--color-red-600);
+  --invert: var(--color-zinc-700);
+  --invert-foreground: var(--color-zinc-50);
 
 }
 
