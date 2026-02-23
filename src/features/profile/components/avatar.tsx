@@ -1,12 +1,15 @@
 /** biome-ignore-all lint/a11y/noSvgWithoutTitle: <> */
+
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { Button } from "@/components/ui/button";
 
 interface AvatarUploadProps {
 	currentAvatar?: string | null;
 	onImageSelect?: (file: File | null) => void;
 	pendingImage?: string | null;
 	disabled?: boolean;
+	buttonLabel?: string;
 }
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -22,6 +25,7 @@ export function AvatarUpload({
 	onImageSelect,
 	pendingImage,
 	disabled,
+	buttonLabel,
 }: AvatarUploadProps) {
 	const [preview, setPreview] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -140,13 +144,11 @@ export function AvatarUpload({
 
 				<div className="flex-1">
 					<div className="flex flex-col gap-2">
-						<button
-							type="button"
-							onClick={open}
-							className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
-						>
-							{hasChanges ? "Choose Different Image" : "Change Avatar"}
-						</button>
+						<Button type="button" onClick={open} variant="outline">
+							{hasChanges
+								? "Choose Different Image"
+								: buttonLabel || "Change Avatar"}
+						</Button>
 
 						{hasChanges && (
 							<button

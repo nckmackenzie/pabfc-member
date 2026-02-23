@@ -1,4 +1,5 @@
 import { useStore } from "@tanstack/react-form";
+import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Field,
@@ -46,13 +47,12 @@ export function SubscribeButton({
 	);
 }
 
-export function TextField({
-	label,
-	placeholder,
-}: {
+type TextFieldProps = {
 	label: string;
 	placeholder?: string;
-}) {
+} & ComponentProps<typeof Input>;
+
+export function TextField({ label, placeholder, ...props }: TextFieldProps) {
 	const field = useFieldContext<string>();
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 	const errors = useStore(field.store, (state) => state.meta.errors);
@@ -68,6 +68,7 @@ export function TextField({
 				onChange={(e) => field.handleChange(e.target.value)}
 				id={field.name}
 				aria-invalid={isInvalid}
+				{...props}
 			/>
 
 			{field.state.meta.isTouched && <FieldError errors={errors} />}
@@ -169,6 +170,7 @@ export function Select({
 
 	return (
 		<Field data-invalid={isInvalid}>
+			<FieldLabel htmlFor={label}>{label}</FieldLabel>
 			<ShadcnSelect.Select
 				name={field.name}
 				value={field.state.value}
