@@ -48,11 +48,17 @@ export function internationalizePhoneNumber(
 	if (phoneNumber.startsWith("+")) {
 		return phoneNumber;
 	}
+
 	if (phoneNumber.startsWith("0")) {
 		return withPlus
 			? `+254${phoneNumber.slice(1)}`
 			: `254${phoneNumber.slice(1)}`;
 	}
+
+	if (phoneNumber.startsWith("254") && phoneNumber.length === 12) {
+		return withPlus ? `+${phoneNumber}` : phoneNumber;
+	}
+
 	return phoneNumber;
 }
 
