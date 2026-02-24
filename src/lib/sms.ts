@@ -29,6 +29,7 @@ export async function sendSms(data: z.infer<typeof smsSchema>) {
 		const response = await sms.send(options);
 		return response as unknown as SMSBroadcastResponse;
 	} catch (error) {
-		console.log(error);
+		console.error("SMS sending failed:", error);
+		throw error;
 	}
 }
