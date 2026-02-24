@@ -22,10 +22,12 @@ export function SubscribeButton({
 	label,
 	className,
 	variant,
+	isPending,
 }: {
 	label: string;
 	className?: string;
 	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost";
+	isPending?: boolean;
 }) {
 	const form = useFormContext();
 	return (
@@ -34,7 +36,7 @@ export function SubscribeButton({
 				{(isSubmitting) => (
 					<Button
 						type="submit"
-						disabled={isSubmitting}
+						disabled={isSubmitting || isPending}
 						size="lg"
 						className={cn("", className)}
 						variant={variant || "default"}
