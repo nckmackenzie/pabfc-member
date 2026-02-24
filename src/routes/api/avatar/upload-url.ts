@@ -9,7 +9,7 @@ export const Route = createFileRoute("/api/avatar/upload-url")({
 				const session = await auth.api.getSession({ headers: request.headers });
 
 				if (!session?.user) {
-					return new Response("Unauthorized", { status: 401 });
+					return Response.json({ error: "Unauthorized" }, { status: 401 });
 				}
 
 				try {
