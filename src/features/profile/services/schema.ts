@@ -44,5 +44,22 @@ export const changePasswordSchema = z
 		path: ["confirmPassword"],
 	});
 
+export const selfRegistrationFormSchema = z.object({
+	memberId: z.string().min(1, { error: "Member ID is required" }),
+	shortCode: z.string().length(6, { error: "Invalid shortcode" }),
+	name: z.string().min(1, { error: "Name is required" }),
+	idType: z.enum(["nationalId", "passport", "driversLicense"], {
+		error: "Please select a valid Identification type",
+	}),
+	idNumber: z.string().min(1, "ID Number is required"),
+	email: z.email({
+		error: (iis) => (!iis.input ? "Email is required" : "Invalid email"),
+	}),
+	image: z.string().nullish(),
+});
+
 export type EditPersonalInfoSchema = z.infer<typeof editPersonalInfoSchema>;
 export type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
+export type SelfRegistrationFormSchema = z.infer<
+	typeof selfRegistrationFormSchema
+>;
