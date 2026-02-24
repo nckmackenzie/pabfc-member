@@ -45,3 +45,18 @@ export type SchemaValidationFailure = {
 };
 
 export type Route = keyof FileRoutesByTo;
+
+export type SMSBroadcastResponse = {
+	SMSMessageData: {
+		Message: string;
+		Recipients: [
+			{
+				statusCode: number;
+				number: string;
+				status: string;
+				cost: string;
+				messageId: string;
+			},
+		];
+	};
+};

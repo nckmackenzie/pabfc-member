@@ -1,23 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { auth } from "@/lib/auth";
 import { generatePresignedUploadUrl } from "@/lib/s3";
 
-export const Route = createFileRoute("/api/avatar/upload-url")({
+export const Route = createFileRoute("/api/avatar/new-member")({
 	server: {
 		handlers: {
 			POST: async ({ request }) => {
-				const session = await auth.api.getSession({ headers: request.headers });
-
-				if (!session?.user) {
-					return Response.json({ error: "Unauthorized" }, { status: 401 });
-				}
-
 				try {
 					const body = await request.json();
-					const { fileType, fileSize } = body;
+					const { fileType, fileSize, memberId } = body;
 
 					const result = await generatePresignedUploadUrl(
-						session.user.id,
+						memberId,
 						fileType,
 						fileSize,
 					);

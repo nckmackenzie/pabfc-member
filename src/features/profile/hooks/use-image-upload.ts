@@ -29,15 +29,22 @@ async function optimizeImage(file: File): Promise<File> {
 	}
 }
 
-async function getUploadUrl(file: File): Promise<UploadUrlResponse> {
-	const response = await fetch("/api/avatar/upload-url", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-			fileType: file.type,
-			fileSize: file.size,
-		}),
-	});
+async function getUploadUrl(
+	file: File,
+	memberId?: string,
+): Promise<UploadUrlResponse> {
+	const response = await fetch(
+		memberId ? "/api/avatar/new-member" : "/api/avatar/upload-url",
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				fileType: file.type,
+				fileSize: file.size,
+				memberId,
+			}),
+		},
+	);
 
 	if (!response.ok) {
 		const error = await response.json();
@@ -78,15 +85,20 @@ async function updateAvatarInDb(
 	return response.json();
 }
 
-export function useAvatarUpload() {
+export function useAvatarUpload(memberId?: string) {
 	return useMutation({
 		mutationFn: async (file: File) => {
 			const optimizedFile = await optimizeImage(file);
 
-			const { uploadUrl, publicUrl } = await getUploadUrl(optimizedFile);
+			const { uploadUrl, publicUrl } = await getUploadUrl(
+				optimizedFile,
+				memberId,
+			);
 			await uploadToS3(uploadUrl, optimizedFile);
 
-			await updateAvatarInDb(publicUrl);
+			if (!memberId) {
+				await updateAvatarInDb(publicUrl);
+			}
 
 			return publicUrl;
 		},

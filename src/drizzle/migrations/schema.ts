@@ -81,7 +81,7 @@ export const members = pgTable("members", {
 	dateOfBirth: date("date_of_birth"),
 	gender: gender().default('unspecified').notNull(),
 	email: varchar(),
-	contact: varchar({ length: 15 }),
+	contact: varchar({ length: 15 }).notNull(),
 	idType: varchar("id_type", { length: 20 }),
 	idNumber: varchar("id_number", { length: 20 }),
 	memberStatus: memberStatus("member_status").default('active').notNull(),
