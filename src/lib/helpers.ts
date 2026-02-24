@@ -140,9 +140,8 @@ export function percentageChangeCalculator(current: number, previous: number) {
 }
 
 export function percentage(partialValue: number, totalValue: number) {
-	return Number.isNaN((100 * partialValue) / totalValue)
-		? 0
-		: (100 * partialValue) / totalValue;
+	if (totalValue === 0) return 0;
+	return (100 * partialValue) / totalValue;
 }
 
 /**
