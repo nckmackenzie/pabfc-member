@@ -144,7 +144,7 @@ export function SelfRegistrationForm() {
 				<form.AppField name="idType">
 					{(field) => (
 						<field.Select
-							label="Idenitication Type"
+							label="Identification Type"
 							values={[
 								{ label: "National ID", value: "nationalId" },
 								{ label: "Passport", value: "passport" },
