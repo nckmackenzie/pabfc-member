@@ -13,7 +13,7 @@ const sms = AfricasTalking.SMS;
 
 export const smsSchema = z.object({
 	to: z.array(
-		z.string().regex(/\+254\d{9}/, { error: "Invalid phone number" }),
+		z.string().regex(/^\+254\d{9}$/, { error: "Invalid phone number" }),
 	),
 	message: z.string(),
 });
