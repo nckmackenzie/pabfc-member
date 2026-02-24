@@ -71,6 +71,7 @@
     "react-dom": "^19.2.0",
     "react-dropzone": "^14.4.0",
     "react-email": "^5.2.5",
+    "react-error-boundary": "^6.1.1",
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
     "react-image-crop": "^11.0.10",

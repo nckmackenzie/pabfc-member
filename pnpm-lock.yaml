@@ -164,6 +164,9 @@ importers:
       react-email:
         specifier: ^5.2.5
         version: 5.2.5
+      react-error-boundary:
+        specifier: ^6.1.1
+        version: 6.1.1(react@19.2.4)
       react-hot-toast:
         specifier: ^2.6.0
         version: 2.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -4590,6 +4593,11 @@ packages:
     resolution: {integrity: sha512-YaCp5n/0czviN4lFndsYongiI0IJOMFtFoRVIPJc9+WPJejJEvzJO94r31p3Cz9swDuV0RhEhH1W0lJFAXntHA==}
     engines: {node: '>=20.0.0'}
     hasBin: true
+
+  react-error-boundary@6.1.1:
+    resolution: {integrity: sha512-BrYwPOdXi5mqkk5lw+Uvt0ThHx32rCt3BkukS4X23A2AIWDPSGX6iaWTc0y9TU/mHDA/6qOSGel+B2ERkOvD1w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0
 
   react-hot-toast@2.6.0:
     resolution: {integrity: sha512-bH+2EBMZ4sdyou/DPrfgIouFpcRLCJ+HoCA32UoAYHn6T3Ur5yfcDCeSr5mwldl6pFOsiocmrXMuoCJ1vV8bWg==}
@@ -9826,6 +9834,10 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+
+  react-error-boundary@6.1.1(react@19.2.4):
+    dependencies:
+      react: 19.2.4
 
   react-hot-toast@2.6.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
