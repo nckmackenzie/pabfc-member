@@ -92,7 +92,6 @@ export function SelfRegistrationForm() {
 			onSubmit: selfRegistrationFormSchema,
 		},
 		onSubmit: async ({ value }) => {
-			console.log({ value });
 			await updateMemberDetails.mutateAsync({
 				...value,
 				idType: value.idType as SelfRegistrationFormSchema["idType"],
