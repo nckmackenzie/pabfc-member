@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -111,13 +111,7 @@ const escapeCsvValue = (value: string) => {
 };
 
 const exportCheckInsToExcel = (rows: CheckIn[]) => {
-	const headers = [
-		"Check In",
-		"Check Out",
-		"Duration",
-		"Active Plan",
-		"Next Renewal",
-	];
+	const headers = ["Check In", "Check Out", "Duration"];
 
 	const dataRows = rows.map((row) => [
 		row.checkInTime
@@ -141,13 +135,16 @@ const exportCheckInsToExcel = (rows: CheckIn[]) => {
 	const link = document.createElement("a");
 	link.href = url;
 	link.download = `check-ins-${dateFormat(new Date())}.csv`;
+	document.body.appendChild(link);
 	link.click();
+	document.body.removeChild(link);
 	URL.revokeObjectURL(url);
 };
 
 function CheckInsTable() {
 	const { filters, resetFilters } = useFilters(Route.id);
 	const hasFilters = !!filters.dateRange?.from || !!filters.dateRange?.to;
+	const queryClient = useQueryClient();
 	const { data } = useSuspenseQuery({
 		queryKey: ["check-ins", filters],
 		queryFn: () => getCheckIns({ data: filters }),
@@ -165,7 +162,11 @@ function CheckInsTable() {
 				buttonText={hasFilters ? "Clear filters" : "Refresh"}
 				buttonVariant={hasFilters ? "outline" : "default"}
 				buttonIcon={hasFilters ? <XIcon /> : <CalendarCheck2Icon />}
-				buttonAction={hasFilters ? resetFilters : undefined}
+				buttonAction={
+					hasFilters
+						? resetFilters
+						: () => queryClient.invalidateQueries({ queryKey: ["check-ins"] })
+				}
 				icon={hasFilters ? <SearchXIcon /> : <CalendarCheck2Icon />}
 			/>
 		);
