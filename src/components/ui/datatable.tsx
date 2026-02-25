@@ -120,7 +120,7 @@ export function DataTable<TData, TValue>({
 							</TableRow>
 						)}
 					</TableBody>
-					{customFooter && table.getRowModel().rows.length && (
+					{customFooter && table.getRowModel().rows.length > 0 && (
 						<TableFooter>
 							<TableRow>{customFooter}</TableRow>
 						</TableFooter>
