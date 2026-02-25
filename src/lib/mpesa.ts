@@ -38,6 +38,7 @@ export async function getAccessToken() {
 	).toString("base64");
 
 	const res = await fetch(url, {
+		signal: AbortSignal.timeout(10_000),
 		headers: {
 			Authorization: `Basic ${auth}`,
 		},
