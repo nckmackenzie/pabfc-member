@@ -101,17 +101,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<ThemeProvider>
-					<SheetProvider>{children}</SheetProvider>
-				</ThemeProvider>
 				<Toaster
 					position="top-center"
 					toastOptions={{
 						className: "custom-toast",
 						duration: 5000,
-						removeDelay: 1000,
 					}}
 				/>
+				<ThemeProvider>
+					<SheetProvider>{children}</SheetProvider>
+				</ThemeProvider>
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",
