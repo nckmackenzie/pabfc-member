@@ -6,11 +6,15 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Loader2Icon } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import type { BreadcrumbValue } from "@/components/router-breadcrumb";
+import { ErrorComponent } from "@/components/ui/error-component";
+import { SheetProvider } from "@/integrations/overlays/sheet-provider";
 import { ThemeProvider } from "@/integrations/theme/theme-provider";
 import { authQueries } from "@/lib/session/queries";
 import type { getRouter } from "@/router";
+import { NotFoundComponent } from "@/ui/components/not-found-component";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -73,7 +77,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 		],
 	}),
-
+	errorComponent: ({ error }) => <ErrorComponent message={error.message} />,
+	pendingComponent: () => (
+		<div className="flex items-center justify-center min-h-screen">
+			<div className="flex flex-col items-center gap-4">
+				<Loader2Icon className="size-12 text-primary" />
+				<p className="text-muted-foreground text-sm">Loading, please wait...</p>
+			</div>
+		</div>
+	),
+	notFoundComponent: () => (
+		<div className="min-h-dvh grid place-content-center">
+			<NotFoundComponent />
+		</div>
+	),
 	shellComponent: RootDocument,
 });
 
@@ -84,7 +101,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<ThemeProvider>{children}</ThemeProvider>
+				<ThemeProvider>
+					<SheetProvider>{children}</SheetProvider>
+				</ThemeProvider>
 				<Toaster
 					position="top-center"
 					toastOptions={{
