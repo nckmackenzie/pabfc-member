@@ -66,6 +66,7 @@ function AddPaymentForm({
 	useEffect(() => {
 		if (statusQuery.data?.status === "success") {
 			form.reset();
+			stkMutation.reset();
 			toast.success((t) => (
 				<ToastContent
 					title="Payment successful"
@@ -77,7 +78,7 @@ function AddPaymentForm({
 				queryKey: ["payments"],
 			});
 		}
-	}, [statusQuery.data?.status, form, queryClient]);
+	}, [statusQuery.data?.status, form, queryClient, stkMutation]);
 
 	useEffect(() => {
 		if (selectedPlan) {

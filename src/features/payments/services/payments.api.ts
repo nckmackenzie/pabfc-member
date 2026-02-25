@@ -22,6 +22,7 @@ import {
 	payments,
 } from "@/drizzle/schema";
 import {
+	billingSettingsSchema,
 	paymentFormSchema,
 	paymentsValidateSearch,
 } from "@/features/payments/services/schema";
@@ -96,6 +97,8 @@ export const getPayments = createServerFn()
 			},
 		});
 
+		const billing = billingSettingsSchema.parse(settings?.billing ?? {});
+
 		return db
 			.select({
 				id: payments.id,
@@ -121,10 +124,8 @@ export const getPayments = createServerFn()
 					...d,
 					paymentNo: generateFullPaymentInvoiceNo(
 						+d.paymentNo,
-						// @ts-expect-error
-						settings?.billing?.invoicePrefix ?? "REC",
-						// @ts-expect-error
-						settings?.billing?.invoiceNumberPadding ?? 6,
+						billing.invoicePrefix,
+						billing.invoiceNumberPadding,
 					),
 				})),
 			);
@@ -133,9 +134,12 @@ export const getPayments = createServerFn()
 export const getPaymentStatusFn = createServerFn()
 	.middleware([authMiddleware])
 	.inputValidator((checkoutRequestId: string) => checkoutRequestId)
-	.handler(async ({ data: checkoutRequestId }) => {
+	.handler(async ({ data: checkoutRequestId, context: { memberId } }) => {
 		const payment = await db.query.mpesaStkRequests.findFirst({
-			where: eq(mpesaStkRequests.checkoutRequestId, checkoutRequestId),
+			where: and(
+				eq(mpesaStkRequests.checkoutRequestId, checkoutRequestId),
+				eq(mpesaStkRequests.memberId, memberId),
+			),
 		});
 
 		if (!payment) {
@@ -176,6 +180,8 @@ export const initiateStkPushFn = createServerFn({ method: "POST" })
 				columns: { billing: true },
 			});
 
+			const billing = billingSettingsSchema.parse(settings?.billing ?? {});
+
 			const plan = await db.query.membershipPlans.findFirst({
 				where: eq(membershipPlans.id, planId),
 			});
@@ -188,10 +194,8 @@ export const initiateStkPushFn = createServerFn({ method: "POST" })
 
 			const accountReference = generateFullPaymentInvoiceNo(
 				paymentNo,
-				// @ts-expect-error
-				settings?.billing?.invoicePrefix ?? "REC",
-				// @ts-expect-error
-				settings?.billing?.invoiceNumberPadding ?? 6,
+				billing.invoicePrefix,
+				billing.invoiceNumberPadding,
 			);
 
 			const mpesaRes = await initiateMpesaStkPush({
@@ -204,11 +208,7 @@ export const initiateStkPushFn = createServerFn({ method: "POST" })
 			const checkoutRequestId = mpesaRes.CheckoutRequestID;
 			const merchantRequestId = mpesaRes.MerchantRequestID;
 
-			// @ts-expect-error
-			const taxType = settings?.billing?.applyTaxToMembership
-				? // @ts-expect-error
-					(settings.billing?.vatType ?? "inclusive")
-				: "none";
+			const taxType = billing.applyTaxToMembership ? billing.vatType : "none";
 			const { amountExlusiveTax, taxAmount, totalInclusiveTax } = taxCalculator(
 				amount,
 				taxType,

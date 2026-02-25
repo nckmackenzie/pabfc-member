@@ -1,5 +1,5 @@
 import { SearchIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +20,7 @@ export function Search({
 	onHandleSearch,
 }: SearchProps) {
 	const [searchValue, setSearchValue] = useState(defaultValue || "");
-
+	const inputId = useId();
 	// Update local state when defaultValue changes (e.g., when filters are reset)
 	useEffect(() => {
 		setSearchValue(defaultValue || "");
@@ -32,13 +32,14 @@ export function Search({
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const query = e.target.value;
+		const trimmedQuery = query.trim();
 		setSearchValue(query);
-		handleSearch(query.trim().length > 0 ? query : "");
+		handleSearch(trimmedQuery.length > 0 ? trimmedQuery : "");
 	};
 
 	return (
 		<div className={cn("relative shrink-0 w-full ", parentClassName)}>
-			<label htmlFor="search" className="sr-only">
+			<label htmlFor={inputId} className="sr-only">
 				Search
 			</label>
 			<input
@@ -53,6 +54,7 @@ export function Search({
 				placeholder={placeholder}
 				value={searchValue}
 				type="search"
+				id={inputId}
 			/>
 			<SearchIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
 		</div>

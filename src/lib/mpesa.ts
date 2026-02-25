@@ -8,7 +8,9 @@ const baseUrl =
 
 export const stkPushSchema = z.object({
 	amount: z.number(),
-	phoneNumber: z.string().regex(/254\d{9}/, { error: "Invalid phone number" }),
+	phoneNumber: z
+		.string()
+		.regex(/^254\d{9}$/, { error: "Invalid phone number" }),
 	accountReference: z.string().optional(),
 	transactionDesc: z.string().optional(),
 });
@@ -105,7 +107,7 @@ export async function initiateMpesaStkPush(params: StkPushParams) {
 	};
 }
 
-export async function registerUrlCallacks() {
+export async function registerUrlCallbacks() {
 	const { MPESA_SHORTCODE, MPESA_CONFIRMATION_URL, MPESA_VALIDATION_URL } =
 		process.env;
 	if (!MPESA_SHORTCODE || !MPESA_CONFIRMATION_URL || !MPESA_VALIDATION_URL)
@@ -138,4 +140,50 @@ export async function registerUrlCallacks() {
 	}
 
 	return json;
+}
+
+export async function queryMpesaStkStatus(checkoutRequestId: string) {
+	const { MPESA_SHORTCODE } = process.env;
+
+	if (!MPESA_SHORTCODE) {
+		throw new Error("MPESA_SHORTCODE missing");
+	}
+
+	const timestamp = format(new Date(), "yyyyMMddHHmmss");
+	const password = generatePassword(timestamp);
+	const accessToken = await getAccessToken();
+
+	const payload = {
+		BusinessShortCode: MPESA_SHORTCODE,
+		Password: password,
+		Timestamp: timestamp,
+		CheckoutRequestID: checkoutRequestId,
+	};
+
+	const url = `${baseUrl}/mpesa/stkpush/v1/query`;
+	const res = await fetch(url, {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(payload),
+	});
+
+	const json = await res.json();
+	if (!res.ok) {
+		console.error("M-Pesa status query error:", json);
+		throw new Error(
+			`Status query failed: ${json.errorMessage ?? json.ResponseDescription}`,
+		);
+	}
+
+	return json as {
+		ResponseCode: string;
+		ResponseDescription: string;
+		MerchantRequestID: string;
+		CheckoutRequestID: string;
+		ResultCode: string;
+		ResultDesc: string;
+	};
 }

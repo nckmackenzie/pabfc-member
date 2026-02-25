@@ -7,6 +7,10 @@ export function usePaymentStatus(checkoutRequestId: string | null) {
 		queryKey: ["mpesa", "status", checkoutRequestId],
 		queryFn: () => getPaymentStatusFn({ data: checkoutRequestId as string }),
 		enabled: !!checkoutRequestId,
-		refetchInterval: 3000, // poll every 3 seconds
+		refetchInterval: (query) => {
+			const status = query.state.data?.status;
+			if (status === "success" || status === "failed") return false;
+			return 3000;
+		},
 	});
 }

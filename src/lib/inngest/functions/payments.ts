@@ -8,6 +8,7 @@ import {
 	memberMemberships,
 	payments,
 } from "@/drizzle/schema";
+import { billingSettingsSchema } from "@/features/payments/services/schema";
 import {
 	currencyFormatter,
 	dateFormat,
@@ -55,7 +56,9 @@ export const createPayment = inngest.createFunction(
 			return {
 				isSessionBased: plan.isSessionBased,
 				startDate: new Date(fetchedPayment.paymentDate),
-				endDate: addDays(new Date(fetchedPayment.paymentDate), plan.duration),
+				endDate: plan.isSessionBased
+					? null
+					: addDays(new Date(fetchedPayment.paymentDate), plan.duration),
 				previousPlanId: membership?.membershipPlanId,
 			};
 		});
@@ -64,6 +67,8 @@ export const createPayment = inngest.createFunction(
 			const settings = await db.query.settings.findFirst({
 				columns: { billing: true },
 			});
+
+			const billing = billingSettingsSchema.parse(settings?.billing ?? {});
 
 			const planId = await db.query.membershipPlans.findFirst({
 				columns: { revenueAccountId: true },
@@ -77,8 +82,7 @@ export const createPayment = inngest.createFunction(
 			});
 
 			return {
-				// @ts-expect-error
-				vatAccountId: settings?.billing?.vatAccountId,
+				vatAccountId: billing.vatAccountId,
 				revenueAccountId: planId?.revenueAccountId as number,
 				bankAccountId: bankId?.id ?? 2,
 			};
@@ -93,27 +97,44 @@ export const createPayment = inngest.createFunction(
 		const updatePayments = await step.run(
 			"update-payment-records",
 			async () => {
-				const payment = await db.transaction(async (tx) => {
+				return await db.transaction(async (tx) => {
+					// Lock the payment record for idempotent processing
+					const [payment] = await tx
+						.select()
+						.from(payments)
+						.where(eq(payments.id, fetchedPayment.id))
+						.for("update");
+
+					if (!payment || payment.status !== "pending") {
+						return {
+							success: true,
+							skipped: true,
+							error: "Payment already processed or not found",
+						};
+					}
+
 					await tx.insert(memberMemberships).values({
 						id: nanoid(),
-						memberId: fetchedPayment.memberId,
-						membershipPlanId: fetchedPayment.planId as string,
+						memberId: payment.memberId,
+						membershipPlanId: payment.planId as string,
 						startDate: dateFormat(planDetails.startDate),
-						endDate: dateFormat(planDetails.endDate),
+						endDate: planDetails.endDate
+							? dateFormat(planDetails.endDate)
+							: null,
 						autoRenew: false,
 						status: "active",
-						paymentId: fetchedPayment.id,
+						paymentId: payment.id,
 						previousMembershipPlanId: planDetails?.previousPlanId,
-						priceCharged: fetchedPayment.totalAmount,
+						priceCharged: payment.totalAmount,
 					});
 
 					const [{ id: journalEntryId }] = await tx
 						.insert(journalEntries)
 						.values({
-							entryDate: fetchedPayment.paymentDate,
-							reference: fetchedPayment.paymentNo,
+							entryDate: payment.paymentDate,
+							reference: payment.paymentNo,
 							source: "plan payment",
-							sourceId: fetchedPayment.id,
+							sourceId: payment.id,
 						})
 						.returning({ id: journalEntries.id });
 
@@ -121,16 +142,16 @@ export const createPayment = inngest.createFunction(
 						lineNumber: 1,
 						accountId: ledgerDetails.revenueAccountId as number,
 						journalEntryId,
-						amount: fetchedPayment.lineTotal,
+						amount: payment.lineTotal,
 						dc: "credit",
 					});
 
-					if (parseFloat(fetchedPayment.taxAmount) > 0) {
+					if (parseFloat(payment.taxAmount) > 0) {
 						await tx.insert(journalLines).values({
 							lineNumber: 2,
 							accountId: ledgerDetails.vatAccountId as number,
 							journalEntryId,
-							amount: fetchedPayment.amount,
+							amount: payment.taxAmount,
 							dc: "credit",
 						});
 					}
@@ -139,31 +160,25 @@ export const createPayment = inngest.createFunction(
 						lineNumber: 3,
 						accountId: ledgerDetails.bankAccountId as number,
 						journalEntryId,
-						amount: fetchedPayment.totalAmount,
+						amount: payment.totalAmount,
 						dc: "debit",
 					});
 
-					const [{ id: paymentId }] = await tx
+					await tx
 						.update(payments)
 						.set({
 							status: "completed",
 							reference: mpesaReceiptNumber?.toString(),
 						})
-						.where(eq(payments.id, fetchedPayment.id))
-						.returning({ id: payments.id });
+						.where(eq(payments.id, payment.id));
 
-					return paymentId;
+					return { success: true, skipped: false, error: null };
 				});
-
-				if (!payment) {
-					return { success: false, error: "Something went wrong" };
-				}
-				return { success: true, error: null };
 			},
 		);
 
 		await step.run("send-sms", async () => {
-			if (!updatePayments.success) return;
+			if (!updatePayments.success || updatePayments.skipped) return;
 
 			const member = await db.query.members.findFirst({
 				columns: { firstName: true, contact: true },
@@ -174,7 +189,7 @@ export const createPayment = inngest.createFunction(
 				return { success: false, error: "Member not found" };
 			}
 
-			const message = `Dear ${toTitleCase(member.firstName)}, your payment of ${currencyFormatter(fetchedPayment.totalAmount)} has been completed successfully.We're glad you're continuing with us`;
+			const message = `Dear ${toTitleCase(member.firstName)}, your payment of ${currencyFormatter(fetchedPayment.totalAmount)} has been completed successfully. We're glad you're continuing with us`;
 			await sendSms({
 				to: [internationalizePhoneNumber(member.contact as string, true)],
 				message,

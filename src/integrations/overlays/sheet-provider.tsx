@@ -47,12 +47,10 @@ export const SheetProvider = ({ children }: SheetProviderProps) => {
 		setIsMounted(true);
 	}, []);
 
-	const setOpen = async (sheet: ReactNode, options?: SheetOptions) => {
+	const setOpen = (sheet: ReactNode, options?: SheetOptions) => {
 		if (sheet) {
 			setShowingSheet(sheet);
-			if (options) {
-				setOptions(options);
-			}
+			setOptions(options ?? {});
 			setIsOpen(true);
 		}
 	};
