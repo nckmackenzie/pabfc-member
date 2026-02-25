@@ -62,6 +62,37 @@ export function internationalizePhoneNumber(
 	return phoneNumber;
 }
 
+export const taxCalculator = (
+	subTotal: number,
+	taxType: "none" | "inclusive" | "exclusive",
+	taxRate = 16,
+) => {
+	switch (taxType) {
+		case "none":
+			return {
+				amountExlusiveTax: subTotal,
+				taxAmount: 0,
+				totalInclusiveTax: subTotal,
+			};
+		case "inclusive": {
+			const amountExlusiveTax = subTotal / (1 + taxRate / 100);
+			return {
+				amountExlusiveTax,
+				taxAmount: subTotal - amountExlusiveTax,
+				totalInclusiveTax: subTotal,
+			};
+		}
+		case "exclusive": {
+			const taxAmount = (subTotal * taxRate) / 100;
+			return {
+				amountExlusiveTax: subTotal,
+				taxAmount,
+				totalInclusiveTax: subTotal + taxAmount,
+			};
+		}
+	}
+};
+
 export function generateFullPaymentInvoiceNo(
 	paymentNo: number,
 	prefix?: string,
