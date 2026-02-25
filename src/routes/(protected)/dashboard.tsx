@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { PageHeader } from "@/components/ui/page-header";
 
 export const Route = createFileRoute("/(protected)/dashboard")({
 	staticData: {
@@ -9,5 +10,9 @@ export const Route = createFileRoute("/(protected)/dashboard")({
 });
 
 function RouteComponent() {
-	return <div>Dashboard</div>;
+	return (
+		<div className="space-y-6">
+			<PageHeader title="Dashboard" description="Welcome to your dashboard" />
+		</div>
+	);
 }
