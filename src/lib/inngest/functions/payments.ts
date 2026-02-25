@@ -175,10 +175,15 @@ export const createPayment = inngest.createFunction(
 			}
 
 			const message = `Dear ${toTitleCase(member.firstName)}, your payment of ${currencyFormatter(fetchedPayment.totalAmount)} has been completed successfully.We're glad you're continuing with us`;
-			await sendSms({
-				to: [internationalizePhoneNumber(member.contact as string, true)],
-				message,
-			});
+			try {
+				await sendSms({
+					to: [internationalizePhoneNumber(member.contact as string, true)],
+					message,
+				});
+			} catch (error) {
+				// keep payment success; log/track notification failure separately
+				console.error("Payment SMS failed", { paymentId: fetchedPayment.id, error });
+			}
 		});
 	},
 );
