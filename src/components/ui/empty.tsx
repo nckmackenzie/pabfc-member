@@ -1,4 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
+import { FolderIcon } from "lucide-react";
 import { Button, type buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -107,8 +108,10 @@ interface EmptyStateProps {
 	title: string;
 	description: string;
 	buttonText: string;
+	buttonIcon?: React.ReactNode;
 	buttonVariant?: VariantProps<typeof buttonVariants>["variant"];
 	buttonAction?: () => void;
+	icon?: React.ReactNode;
 }
 
 export function EmptyState({
@@ -117,17 +120,21 @@ export function EmptyState({
 	buttonVariant,
 	buttonText,
 	buttonAction,
+	buttonIcon,
+	icon,
 }: EmptyStateProps) {
 	return (
 		<div className="flex items-center justify-center">
 			<Empty>
 				<EmptyHeader>
+					<EmptyMedia variant="icon">{icon || <FolderIcon />}</EmptyMedia>
 					<EmptyTitle>{title}</EmptyTitle>
 					<EmptyDescription>{description}</EmptyDescription>
 				</EmptyHeader>
 				<EmptyContent>
 					<div className="flex gap-2">
 						<Button variant={buttonVariant} onClick={buttonAction}>
+							{buttonIcon}
 							{buttonText}
 						</Button>
 					</div>
