@@ -9,7 +9,7 @@ export function ErrorComponent({
 	message?: string;
 }) {
 	return (
-		<Alert variant="destructive" className="max-w-lg">
+		<Alert variant="destructive" className="max-w-lg mx-auto">
 			<CircleAlertIcon />
 			<AlertTitle>{title || "Error! Something went wrong"}</AlertTitle>
 			<AlertDescription>
