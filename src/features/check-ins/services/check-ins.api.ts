@@ -35,7 +35,7 @@ export const getCheckIns = createServerFn()
 			.from(vwAttendanceDetails)
 			.innerJoin(
 				attendanceLogs,
-				eq(attendanceLogs.id, vwAttendanceDetails.id),
+				eq(attendanceLogs.id, sql<bigint>`${vwAttendanceDetails.id}`),
 			)
 			.where(and(eq(attendanceLogs.memberId, memberId), ...filters))
 			.orderBy(desc(vwAttendanceDetails.checkInTime));
