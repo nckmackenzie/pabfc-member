@@ -6,6 +6,7 @@ import {
 	useNavigate,
 } from "@tanstack/react-router";
 import { LogOutIcon, MoonIcon, SunIcon } from "lucide-react";
+import toast from "react-hot-toast";
 import { AppSidebar } from "@/components/app-sidebar";
 import { RouterBreadcrumb } from "@/components/router-breadcrumb";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { ToastContent } from "@/components/ui/toast-content";
 import { useTheme } from "@/integrations/theme/theme-provider";
 import { authClient } from "@/lib/auth-client";
 import { getMemberId, getUserSession } from "@/lib/session/session.api";
@@ -54,8 +56,19 @@ function RouteComponent() {
 	const { setTheme } = useTheme();
 	const navigate = useNavigate();
 	const handleSignOut = async () => {
-		await authClient.signOut();
-		navigate({ to: "/sign-in" });
+		try {
+			await authClient.signOut();
+			navigate({ to: "/sign-in" });
+		} catch (err) {
+			console.error(err);
+			toast.error((t) => (
+				<ToastContent
+					t={t}
+					title="Sign Out Error"
+					message="Failed to sign out. Please try again."
+				/>
+			));
+		}
 	};
 	return (
 		<SidebarProvider>
@@ -91,7 +104,7 @@ function RouteComponent() {
 						</DropdownMenuContent>
 					</DropdownMenu>
 					<Button variant="ghost" onClick={handleSignOut}>
-						<LogOutIcon className="size-3.5! " />
+						<LogOutIcon className="size-3.5" />
 						<span className="hidden sm:text-sm">Logout</span>
 					</Button>
 				</header>

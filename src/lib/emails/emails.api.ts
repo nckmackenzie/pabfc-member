@@ -19,8 +19,10 @@ export const sendEmailVerificationEmail = createServerFn({
 	.handler(async ({ data }) => {
 		try {
 			const { error } = await resend.emails.send({
-				//TODO: Change this to the actual email address
-				from: "Prime Age Beauty & Fitness Center <onboarding@resend.dev>",
+				from:
+					process.env.NODE_ENV === "development"
+						? "Prime Age Beauty & Fitness Center <onboarding@resend.dev>"
+						: "Prime Age Beauty & Fitness Center <info@primeagebeauty.com>",
 				to: [
 					process.env.NODE_ENV === "development"
 						? "delivered@resend.dev"

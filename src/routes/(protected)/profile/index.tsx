@@ -50,7 +50,6 @@ export const Route = createFileRoute("/(protected)/profile/")({
 const TABS = [
 	{ value: "personal", label: "Personal Information", icon: UserIcon },
 	{ value: "security", label: "Security", icon: LockKeyholeIcon },
-	// { value: "account", label: "Account", icon: LinkIcon },ss
 	{ value: "sessions", label: "Sessions", icon: TabletSmartphoneIcon },
 ];
 

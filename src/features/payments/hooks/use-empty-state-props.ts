@@ -7,7 +7,6 @@ export function usePaymentsEmptyState(hasFilters: boolean, reset: () => void) {
 				? {
 						title: "No payments yet",
 						description: "Once you make a payment, it will appear here",
-						buttonText: "Make a Payment",
 					}
 				: {
 						title: "No payments found",
