@@ -10,7 +10,6 @@ import {
 	members,
 	users,
 } from "@/drizzle/schema";
-import { env } from "@/env/server";
 import { ApplicationError } from "@/lib/error-handling/app-error";
 import { internationalizePhoneNumber, isValidS3Url } from "@/lib/helpers";
 import { generateRandomPassword } from "@/lib/password-helper";
@@ -48,7 +47,10 @@ export const completeRegistration = createServerFn({ method: "POST" })
 			),
 		});
 
-		if (rest.image && !isValidS3Url(rest.image, env.AWS_S3_PUBLIC_URL)) {
+		if (
+			rest.image &&
+			!isValidS3Url(rest.image, process.env.AWS_S3_PUBLIC_URL)
+		) {
 			throw new ApplicationError("Invalid image URL. Must be a valid S3 URL.");
 		}
 
@@ -110,7 +112,7 @@ export const completeRegistration = createServerFn({ method: "POST" })
 
 				const hashedPassword = await bcrypt.hash(
 					password,
-					Number(env.BCRYPT_ROUNDS),
+					Number(process.env.BCRYPT_ROUNDS as string),
 				);
 
 				const [{ id }] = await tx

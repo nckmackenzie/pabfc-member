@@ -4,11 +4,10 @@ import {
 	usernameClient,
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-import { env } from "@/env/client";
 import type { auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
-	baseURL: env.VITE_BASE_URL,
+	baseURL: process.env.VITE_BASE_URL as string,
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect: () => {

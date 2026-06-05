@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { members, users } from "@/drizzle/schema";
-import { env } from "@/env/server";
 import { auth } from "@/lib/auth";
 import { deleteAvatar } from "@/lib/s3";
 
@@ -26,7 +25,7 @@ export const Route = createFileRoute("/api/avatar/update")({
 						.where(eq(users.id, session.user.id))
 						.limit(1);
 
-					if (currentUser?.image?.includes(env.AWS_BUCKET)) {
+					if (currentUser?.image?.includes(process.env.AWS_BUCKET as string)) {
 						await deleteAvatar(currentUser.image);
 					}
 
