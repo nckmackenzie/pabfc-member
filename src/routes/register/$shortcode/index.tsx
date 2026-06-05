@@ -52,7 +52,7 @@ export const Route = createFileRoute("/register/$shortcode/")({
 
 function RouteComponent() {
 	return (
-		<main className="min-h-dvh py-4">
+		<main className="h-dvh py-4">
 			<div className="mx-4 max-w-2xl lg:mx-auto border p-4 md:p-6 mt-6 rounded-lg shadow-sm space-y-6">
 				<header>
 					<h1 className="text-lg md:text-2xl font-bold font-display">

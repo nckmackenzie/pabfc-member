@@ -24,7 +24,7 @@ export function SelfRegistrationForm() {
 		string | null
 	>(null);
 	const avatarUploadMutation = useAvatarUpload(memberId);
-	const navigate = useNavigate({ from: "/register/$shortcode/" });
+	// const navigate = useNavigate({ from: "/register/$shortcode/" });
 
 	const updateMemberDetails = useMutation({
 		mutationFn: async (
@@ -36,9 +36,9 @@ export function SelfRegistrationForm() {
 				avartarUrl = await avatarUploadMutation.mutateAsync(values.avatarFile);
 			}
 
-			if (!avartarUrl) {
-				throw new Error("Failed to upload your photo. Please try again.");
-			}
+			// if (!avartarUrl) {
+			// 	throw new Error("Failed to upload your photo. Please try again.");
+			// }
 
 			return await completeRegistration({
 				data: {
@@ -63,8 +63,8 @@ export function SelfRegistrationForm() {
 					message="Registration completed successfully"
 				/>
 			));
-			form.reset();
-			navigate({ to: "/sign-in" });
+			// form.reset();
+			// navigate({ to: "/sign-in" });
 		},
 		onError: (error) => {
 			const passedErrorMessage = parseErrorMessage(error);

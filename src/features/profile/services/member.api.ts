@@ -39,32 +39,32 @@ export const completeRegistration = createServerFn({ method: "POST" })
 	.inputValidator(selfRegistrationFormSchema)
 	.handler(async ({ data }) => {
 		const { memberId, shortCode, ...rest } = data;
-		// const registration = await db.query.memberRegistrationLinks.findFirst({
-		// 	columns: { id: true },
-		// 	where: and(
-		// 		eq(memberRegistrationLinks.shortCode, shortCode),
-		// 		eq(memberRegistrationLinks.memberId, memberId),
-		// 		isNull(memberRegistrationLinks.usedAt),
-		// 	),
-		// });
+		const registration = await db.query.memberRegistrationLinks.findFirst({
+			columns: { id: true },
+			where: and(
+				eq(memberRegistrationLinks.shortCode, shortCode),
+				eq(memberRegistrationLinks.memberId, memberId),
+				isNull(memberRegistrationLinks.usedAt),
+			),
+		});
 
 		if (rest.image && !isValidS3Url(rest.image, env.AWS_S3_PUBLIC_URL)) {
 			throw new ApplicationError("Invalid image URL. Must be a valid S3 URL.");
 		}
 
-		// if (!registration) {
-		// 	throw new ApplicationError(
-		// 		"Registration link not found or already used.",
-		// 	);
-		// }
+		if (!registration) {
+			throw new ApplicationError(
+				"Registration link not found or already used.",
+			);
+		}
 
-		// const member = await db.query.members.findFirst({
-		// 	where: eq(members.id, memberId),
-		// });
+		const member = await db.query.members.findFirst({
+			where: eq(members.id, memberId),
+		});
 
-		// if (!member) {
-		// 	throw new ApplicationError("Member not found.");
-		// }
+		if (!member) {
+			throw new ApplicationError("Member not found.");
+		}
 
 		const password = await generateRandomPassword();
 
