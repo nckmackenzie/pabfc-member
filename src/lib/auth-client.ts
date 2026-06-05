@@ -7,7 +7,7 @@ import { createAuthClient } from "better-auth/react";
 import type { auth } from "@/lib/auth";
 
 export const authClient = createAuthClient({
-	baseURL: process.env.VITE_BASE_URL as string,
+	baseURL: import.meta.env.VITE_BASE_URL as string,
 	plugins: [
 		twoFactorClient({
 			onTwoFactorRedirect: () => {
