@@ -4,7 +4,7 @@ import { sanitizeRedirect } from "@/hooks/use-previous-location";
 
 export const Route = createFileRoute("/(auth)")({
 	beforeLoad: async ({ search, context }) => {
-		const safe = sanitizeRedirect(search.redirectTo ?? "/dashboard");
+		const safe = sanitizeRedirect(search.redirectTo ?? "/payments");
 		if (context.userSession) {
 			throw redirect({ to: safe });
 		}
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/(auth)")({
 	},
 	component: RouteComponent,
 	validateSearch: z.object({
-		redirectTo: z.string().optional().catch("/member/dashboard"),
+		redirectTo: z.string().optional().catch("/payments"),
 	}),
 });
 

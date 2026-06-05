@@ -2,7 +2,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { PlusIcon, ReceiptText, SearchXIcon, XIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/datatable";
 import { DateRangePicker } from "@/components/ui/date-ranger-picker";
 import { EmptyState } from "@/components/ui/empty";
@@ -12,7 +11,6 @@ import { DatatableSkeleton } from "@/components/ui/loaders";
 import { PageHeader } from "@/components/ui/page-header";
 import { Search } from "@/components/ui/search";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAddPaymentAction } from "@/features/payments/hooks/use-add-payment";
 import { usePaymentsEmptyState } from "@/features/payments/hooks/use-empty-state-props";
 import {
 	getPayments,
@@ -53,18 +51,11 @@ export const Route = createFileRoute("/(protected)/payments/")({
 
 function RouteComponent() {
 	const { setFilters, filters } = useFilters(Route.id);
-	const { handleAddNewPayment } = useAddPaymentAction();
 	return (
 		<div className="space-y-6">
 			<PageHeader
 				title="Payments"
 				description="View and manage your payments"
-				content={
-					<Button variant="default" onClick={handleAddNewPayment}>
-						<PlusIcon />
-						Make a Payment
-					</Button>
-				}
 			/>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				<Search
@@ -137,7 +128,6 @@ const columns: Array<ColumnDef<Payment>> = [
 ];
 function PaymentsTable() {
 	const { filters, resetFilters } = useFilters(Route.id);
-	const { handleAddNewPayment } = useAddPaymentAction();
 	const hasFilters =
 		!!filters?.search || !!filters.dateRange?.from || !!filters.dateRange?.to;
 	const { data } = useSuspenseQuery({
@@ -145,11 +135,7 @@ function PaymentsTable() {
 		queryFn: () => getPayments({ data: filters }),
 	});
 
-	const obj = usePaymentsEmptyState(
-		hasFilters,
-		resetFilters,
-		handleAddNewPayment,
-	);
+	const obj = usePaymentsEmptyState(hasFilters, resetFilters);
 
 	if (data.length === 0) {
 		return (

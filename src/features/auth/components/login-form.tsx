@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import toast from "react-hot-toast";
-import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { ToastContent } from "@/components/ui/toast-content";
 import { loginSchema } from "@/features/auth/services/schemas";
@@ -43,27 +42,27 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 		},
 	});
 
-	async function handleGoogleLogin() {
-		await authClient.signIn.social({
-			provider: "google",
-			fetchOptions: {
-				onError: (error) => {
-					toast.error((t) => (
-						<ToastContent
-							message={error.error.message ?? "An unknown error occurred"}
-							title="Login Error"
-							t={t}
-						/>
-					));
-				},
-				onSuccess: async () => {
-					const target = sanitizeRedirect(redirectTo ?? previousLocation);
-					form.reset();
-					navigate({ to: target, replace: true });
-				},
-			},
-		});
-	}
+	// async function handleGoogleLogin() {
+	// 	await authClient.signIn.social({
+	// 		provider: "google",
+	// 		fetchOptions: {
+	// 			onError: (error) => {
+	// 				toast.error((t) => (
+	// 					<ToastContent
+	// 						message={error.error.message ?? "An unknown error occurred"}
+	// 						title="Login Error"
+	// 						t={t}
+	// 					/>
+	// 				));
+	// 			},
+	// 			onSuccess: async () => {
+	// 				const target = sanitizeRedirect(redirectTo ?? previousLocation);
+	// 				form.reset();
+	// 				navigate({ to: target, replace: true });
+	// 			},
+	// 		},
+	// 	});
+	// }
 
 	return (
 		<form
@@ -106,7 +105,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 					<form.SubscribeButton label="Login" className="w-full" />
 				</form.AppForm>
 			</FieldGroup>
-			<FieldGroup>
+			{/* <FieldGroup>
 				<div className="relative flex items-center py-5">
 					<div className="grow border-t border-gray-300"></div>
 					<span className="shrink mx-4 text-gray-600 text-sm">
@@ -123,7 +122,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 					<GoogleIcon />
 					Sign in with Google
 				</Button>
-			</FieldGroup>
+			</FieldGroup> */}
 		</form>
 	);
 }
