@@ -1,10 +1,7 @@
-import { Link, linkOptions, useNavigate } from "@tanstack/react-router";
+import { Link, linkOptions } from "@tanstack/react-router";
 import {
-	CalendarCheck2Icon,
 	DumbbellIcon,
 	HandCoinsIcon,
-	HomeIcon,
-	LogOutIcon,
 	type LucideIcon,
 	UserIcon,
 } from "lucide-react";
@@ -19,7 +16,6 @@ import {
 	SidebarMenuItem,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type Item = {
@@ -30,22 +26,16 @@ type Item = {
 };
 
 const menuItemOptions: Item[] = linkOptions([
-	{
-		title: "Dashboard",
-		to: "/dashboard",
-		icon: HomeIcon,
-		activeOptions: { exact: false },
-	},
+	// {
+	// 	title: "Dashboard",
+	// 	to: "/dashboard",
+	// 	icon: HomeIcon,
+	// 	activeOptions: { exact: false },
+	// },
 	{
 		title: "Payments",
 		to: "/payments",
 		icon: HandCoinsIcon,
-		activeOptions: { exact: false },
-	},
-	{
-		title: "Check Ins",
-		to: "/check-ins",
-		icon: CalendarCheck2Icon,
 		activeOptions: { exact: false },
 	},
 	{
@@ -66,19 +56,13 @@ export function AppSidebar({
 		createdAt: Date;
 	};
 }) {
-	const navigate = useNavigate();
-	const handleSignOut = async () => {
-		await authClient.signOut();
-		navigate({ to: "/sign-in" });
-	};
-
 	return (
 		<Sidebar className="border-r-0">
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton asChild size="lg">
-							<Link to="/dashboard" className="flex items-center gap-3">
+							<Link to="/payments" className="flex items-center gap-3">
 								<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
 									<DumbbellIcon className="size-4" />
 								</div>
@@ -117,17 +101,6 @@ export function AppSidebar({
 						</span>
 					</div>
 				</div>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton
-							onClick={handleSignOut}
-							className="text-sm transition-colors hover:bg-gray-200 hover:text-rose-600 dark:hover:bg-gray-800 dark:hover:text-rose-600 flex items-center gap-2"
-						>
-							<LogOutIcon className="size-3.5! " />
-							<span className="text-sm">Logout</span>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
 			</SidebarFooter>
 		</Sidebar>
 	);

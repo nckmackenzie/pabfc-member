@@ -5,7 +5,7 @@ export const Route = createFileRoute("/")({
 		if (!context.userSession) {
 			redirect({ to: "/sign-in", throw: true });
 		} else {
-			redirect({ to: "/dashboard", throw: true });
+			redirect({ to: "/payments", throw: true });
 		}
 	},
 });

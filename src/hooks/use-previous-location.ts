@@ -17,7 +17,7 @@ export function isAuthPath(path?: string) {
 	}
 }
 
-export function sanitizeRedirect(target?: string, fallback = "/dashboard") {
+export function sanitizeRedirect(target?: string, fallback = "/payments") {
 	if (!target) return fallback;
 	// Prevent open redirects by only allowing same-origin relative paths
 	try {
@@ -39,8 +39,7 @@ export function sanitizeRedirect(target?: string, fallback = "/dashboard") {
 
 export function usePreviousLocation() {
 	const router = useRouter();
-	const [previousLocation, setPreviousLocation] =
-		useState<string>("/app/dashboard");
+	const [previousLocation, setPreviousLocation] = useState<string>("/payments");
 	useEffect(() => {
 		return router.subscribe("onResolved", ({ fromLocation }) => {
 			if (fromLocation?.href) {

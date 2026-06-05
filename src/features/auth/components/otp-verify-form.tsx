@@ -31,7 +31,7 @@ export function OtpVerifyForm({ redirectTo }: { redirectTo?: string }) {
 				fetchOptions: {
 					onSuccess: async () => {
 						form.reset();
-						navigate({ to: redirectTo ?? "/dashboard", replace: true });
+						navigate({ to: redirectTo ?? "/payments", replace: true });
 					},
 					onError: (error) => {
 						toast.error((t) => (
@@ -99,7 +99,7 @@ export function BackupCodeVerifyForm({ redirectTo }: { redirectTo?: string }) {
 				fetchOptions: {
 					onSuccess: async () => {
 						form.reset();
-						navigate({ to: redirectTo ?? "/dashboard", replace: true });
+						navigate({ to: redirectTo ?? "/payments", replace: true });
 					},
 					onError: (error) => {
 						toast.error((t) => (

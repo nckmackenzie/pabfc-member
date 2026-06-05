@@ -30,7 +30,7 @@ export function NotFoundComponent({
 			<div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(90%_60%_at_50%_0%,oklch(var(--primary)/0.18),transparent_60%)]" />
 			<div className="pointer-events-none absolute -left-10 -top-12 -z-10 size-56 rounded-full bg-primary/20 blur-3xl" />
 			<div className="pointer-events-none absolute -bottom-16 right-0 -z-10 size-72 rounded-full bg-secondary/60 blur-3xl" />
-			<div className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12] [background-image:repeating-linear-gradient(120deg,transparent,transparent_10px,hsl(var(--foreground)/0.12)_12px,transparent_18px)]" />
+			<div className="pointer-events-none absolute inset-0 -z-10 opacity-[0.12] bg-[repeating-linear-gradient(120deg,transparent,transparent_10px,hsl(var(--foreground)/0.12)_12px,transparent_18px)]" />
 
 			<div className="space-y-6">
 				<div className="space-y-6">
@@ -54,7 +54,7 @@ export function NotFoundComponent({
 					<div className="flex flex-wrap items-center gap-3">
 						<Link
 							className={buttonVariants({ variant: "default", size: "lg" })}
-							to="/dashboard"
+							to="/payments"
 						>
 							<ArrowLeftIcon />
 							Go Back Home
