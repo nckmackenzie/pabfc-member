@@ -8,7 +8,6 @@ import { nanoid } from "nanoid";
 import { UAParser } from "ua-parser-js";
 import { db } from "@/db";
 import * as schema from "@/drizzle/schema";
-import { env } from "@/env/server";
 import { sendEmailVerificationEmail } from "@/lib/emails/emails.api";
 
 export const auth = betterAuth({
@@ -23,7 +22,7 @@ export const auth = betterAuth({
 			twoFactors: schema.twoFactors,
 		},
 	}),
-	baseURL: env.VITE_BASE_URL,
+	baseURL: process.env.VITE_BASE_URL as string,
 	account: {
 		accountLinking: { enabled: true },
 	},
@@ -78,7 +77,10 @@ export const auth = betterAuth({
 		// requireEmailVerification: true,
 		password: {
 			hash: async (password: string) => {
-				return await bcrypt.hash(password, Number(env.BCRYPT_ROUNDS));
+				return await bcrypt.hash(
+					password,
+					Number(process.env.BCRYPT_ROUNDS as string),
+				);
 			},
 			verify: async ({
 				hash,
@@ -93,8 +95,8 @@ export const auth = betterAuth({
 	},
 	socialProviders: {
 		google: {
-			clientId: env.GOOGLE_CLIENT_ID,
-			clientSecret: env.GOOGLE_CLIENT_SECRET,
+			clientId: process.env.GOOGLE_CLIENT_ID as string,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
 		},
 	},
 	emailVerification: {

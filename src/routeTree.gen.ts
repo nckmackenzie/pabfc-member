@@ -9,24 +9,94 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as protectedRouteRouteImport } from './routes/(protected)/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as protectedDashboardRouteImport } from './routes/(protected)/dashboard'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as auth2faRouteImport } from './routes/(auth)/2fa'
+import { Route as RegisterShortcodeIndexRouteImport } from './routes/register/$shortcode/index'
+import { Route as ApiInngestIndexRouteImport } from './routes/api/inngest/index'
+import { Route as protectedProfileIndexRouteImport } from './routes/(protected)/profile/index'
+import { Route as protectedPaymentsIndexRouteImport } from './routes/(protected)/payments/index'
+import { Route as protectedCheckInsIndexRouteImport } from './routes/(protected)/check-ins/index'
+import { Route as ApiAvatarUploadUrlRouteImport } from './routes/api/avatar/upload-url'
+import { Route as ApiAvatarUpdateRouteImport } from './routes/api/avatar/update'
+import { Route as ApiAvatarNewMemberRouteImport } from './routes/api/avatar/new-member'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const protectedRouteRoute = protectedRouteRouteImport.update({
+  id: '/(protected)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const protectedDashboardRoute = protectedDashboardRouteImport.update({
-  id: '/(protected)/dashboard',
+  id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => protectedRouteRoute,
 } as any)
 const authSignInRoute = authSignInRouteImport.update({
-  id: '/(auth)/sign-in',
+  id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const auth2faRoute = auth2faRouteImport.update({
+  id: '/2fa',
+  path: '/2fa',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const RegisterShortcodeIndexRoute = RegisterShortcodeIndexRouteImport.update({
+  id: '/register/$shortcode/',
+  path: '/register/$shortcode/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInngestIndexRoute = ApiInngestIndexRouteImport.update({
+  id: '/api/inngest/',
+  path: '/api/inngest/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const protectedProfileIndexRoute = protectedProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => protectedRouteRoute,
+} as any)
+const protectedPaymentsIndexRoute = protectedPaymentsIndexRouteImport.update({
+  id: '/payments/',
+  path: '/payments/',
+  getParentRoute: () => protectedRouteRoute,
+} as any)
+const protectedCheckInsIndexRoute = protectedCheckInsIndexRouteImport.update({
+  id: '/check-ins/',
+  path: '/check-ins/',
+  getParentRoute: () => protectedRouteRoute,
+} as any)
+const ApiAvatarUploadUrlRoute = ApiAvatarUploadUrlRouteImport.update({
+  id: '/api/avatar/upload-url',
+  path: '/api/avatar/upload-url',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAvatarUpdateRoute = ApiAvatarUpdateRouteImport.update({
+  id: '/api/avatar/update',
+  path: '/api/avatar/update',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAvatarNewMemberRoute = ApiAvatarNewMemberRouteImport.update({
+  id: '/api/avatar/new-member',
+  path: '/api/avatar/new-member',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -37,45 +107,136 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/2fa': typeof auth2faRoute
+  '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/dashboard': typeof protectedDashboardRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/avatar/new-member': typeof ApiAvatarNewMemberRoute
+  '/api/avatar/update': typeof ApiAvatarUpdateRoute
+  '/api/avatar/upload-url': typeof ApiAvatarUploadUrlRoute
+  '/check-ins/': typeof protectedCheckInsIndexRoute
+  '/payments/': typeof protectedPaymentsIndexRoute
+  '/profile/': typeof protectedProfileIndexRoute
+  '/api/inngest/': typeof ApiInngestIndexRoute
+  '/register/$shortcode/': typeof RegisterShortcodeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/2fa': typeof auth2faRoute
+  '/forgot-password': typeof authForgotPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/dashboard': typeof protectedDashboardRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/avatar/new-member': typeof ApiAvatarNewMemberRoute
+  '/api/avatar/update': typeof ApiAvatarUpdateRoute
+  '/api/avatar/upload-url': typeof ApiAvatarUploadUrlRoute
+  '/check-ins': typeof protectedCheckInsIndexRoute
+  '/payments': typeof protectedPaymentsIndexRoute
+  '/profile': typeof protectedProfileIndexRoute
+  '/api/inngest': typeof ApiInngestIndexRoute
+  '/register/$shortcode': typeof RegisterShortcodeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/(protected)': typeof protectedRouteRouteWithChildren
+  '/(auth)/2fa': typeof auth2faRoute
+  '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(protected)/dashboard': typeof protectedDashboardRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/avatar/new-member': typeof ApiAvatarNewMemberRoute
+  '/api/avatar/update': typeof ApiAvatarUpdateRoute
+  '/api/avatar/upload-url': typeof ApiAvatarUploadUrlRoute
+  '/(protected)/check-ins/': typeof protectedCheckInsIndexRoute
+  '/(protected)/payments/': typeof protectedPaymentsIndexRoute
+  '/(protected)/profile/': typeof protectedProfileIndexRoute
+  '/api/inngest/': typeof ApiInngestIndexRoute
+  '/register/$shortcode/': typeof RegisterShortcodeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in' | '/dashboard' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/2fa'
+    | '/forgot-password'
+    | '/sign-in'
+    | '/dashboard'
+    | '/api/auth/$'
+    | '/api/avatar/new-member'
+    | '/api/avatar/update'
+    | '/api/avatar/upload-url'
+    | '/check-ins/'
+    | '/payments/'
+    | '/profile/'
+    | '/api/inngest/'
+    | '/register/$shortcode/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-in' | '/dashboard' | '/api/auth/$'
+  to:
+    | '/'
+    | '/2fa'
+    | '/forgot-password'
+    | '/sign-in'
+    | '/dashboard'
+    | '/api/auth/$'
+    | '/api/avatar/new-member'
+    | '/api/avatar/update'
+    | '/api/avatar/upload-url'
+    | '/check-ins'
+    | '/payments'
+    | '/profile'
+    | '/api/inngest'
+    | '/register/$shortcode'
   id:
     | '__root__'
     | '/'
+    | '/(auth)'
+    | '/(protected)'
+    | '/(auth)/2fa'
+    | '/(auth)/forgot-password'
     | '/(auth)/sign-in'
     | '/(protected)/dashboard'
     | '/api/auth/$'
+    | '/api/avatar/new-member'
+    | '/api/avatar/update'
+    | '/api/avatar/upload-url'
+    | '/(protected)/check-ins/'
+    | '/(protected)/payments/'
+    | '/(protected)/profile/'
+    | '/api/inngest/'
+    | '/register/$shortcode/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  authSignInRoute: typeof authSignInRoute
-  protectedDashboardRoute: typeof protectedDashboardRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
+  protectedRouteRoute: typeof protectedRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiAvatarNewMemberRoute: typeof ApiAvatarNewMemberRoute
+  ApiAvatarUpdateRoute: typeof ApiAvatarUpdateRoute
+  ApiAvatarUploadUrlRoute: typeof ApiAvatarUploadUrlRoute
+  ApiInngestIndexRoute: typeof ApiInngestIndexRoute
+  RegisterShortcodeIndexRoute: typeof RegisterShortcodeIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(protected)': {
+      id: '/(protected)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof protectedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -88,13 +249,83 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof protectedDashboardRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof protectedRouteRoute
     }
     '/(auth)/sign-in': {
       id: '/(auth)/sign-in'
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/2fa': {
+      id: '/(auth)/2fa'
+      path: '/2fa'
+      fullPath: '/2fa'
+      preLoaderRoute: typeof auth2faRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/register/$shortcode/': {
+      id: '/register/$shortcode/'
+      path: '/register/$shortcode'
+      fullPath: '/register/$shortcode/'
+      preLoaderRoute: typeof RegisterShortcodeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/inngest/': {
+      id: '/api/inngest/'
+      path: '/api/inngest'
+      fullPath: '/api/inngest/'
+      preLoaderRoute: typeof ApiInngestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(protected)/profile/': {
+      id: '/(protected)/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof protectedProfileIndexRouteImport
+      parentRoute: typeof protectedRouteRoute
+    }
+    '/(protected)/payments/': {
+      id: '/(protected)/payments/'
+      path: '/payments'
+      fullPath: '/payments/'
+      preLoaderRoute: typeof protectedPaymentsIndexRouteImport
+      parentRoute: typeof protectedRouteRoute
+    }
+    '/(protected)/check-ins/': {
+      id: '/(protected)/check-ins/'
+      path: '/check-ins'
+      fullPath: '/check-ins/'
+      preLoaderRoute: typeof protectedCheckInsIndexRouteImport
+      parentRoute: typeof protectedRouteRoute
+    }
+    '/api/avatar/upload-url': {
+      id: '/api/avatar/upload-url'
+      path: '/api/avatar/upload-url'
+      fullPath: '/api/avatar/upload-url'
+      preLoaderRoute: typeof ApiAvatarUploadUrlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/avatar/update': {
+      id: '/api/avatar/update'
+      path: '/api/avatar/update'
+      fullPath: '/api/avatar/update'
+      preLoaderRoute: typeof ApiAvatarUpdateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/avatar/new-member': {
+      id: '/api/avatar/new-member'
+      path: '/api/avatar/new-member'
+      fullPath: '/api/avatar/new-member'
+      preLoaderRoute: typeof ApiAvatarNewMemberRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -107,11 +338,50 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface authRouteRouteChildren {
+  auth2faRoute: typeof auth2faRoute
+  authForgotPasswordRoute: typeof authForgotPasswordRoute
+  authSignInRoute: typeof authSignInRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  auth2faRoute: auth2faRoute,
+  authForgotPasswordRoute: authForgotPasswordRoute,
+  authSignInRoute: authSignInRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
+
+interface protectedRouteRouteChildren {
+  protectedDashboardRoute: typeof protectedDashboardRoute
+  protectedCheckInsIndexRoute: typeof protectedCheckInsIndexRoute
+  protectedPaymentsIndexRoute: typeof protectedPaymentsIndexRoute
+  protectedProfileIndexRoute: typeof protectedProfileIndexRoute
+}
+
+const protectedRouteRouteChildren: protectedRouteRouteChildren = {
+  protectedDashboardRoute: protectedDashboardRoute,
+  protectedCheckInsIndexRoute: protectedCheckInsIndexRoute,
+  protectedPaymentsIndexRoute: protectedPaymentsIndexRoute,
+  protectedProfileIndexRoute: protectedProfileIndexRoute,
+}
+
+const protectedRouteRouteWithChildren = protectedRouteRoute._addFileChildren(
+  protectedRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  authSignInRoute: authSignInRoute,
-  protectedDashboardRoute: protectedDashboardRoute,
+  authRouteRoute: authRouteRouteWithChildren,
+  protectedRouteRoute: protectedRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiAvatarNewMemberRoute: ApiAvatarNewMemberRoute,
+  ApiAvatarUpdateRoute: ApiAvatarUpdateRoute,
+  ApiAvatarUploadUrlRoute: ApiAvatarUploadUrlRoute,
+  ApiInngestIndexRoute: ApiInngestIndexRoute,
+  RegisterShortcodeIndexRoute: RegisterShortcodeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

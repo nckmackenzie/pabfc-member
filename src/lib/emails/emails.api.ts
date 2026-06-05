@@ -1,10 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { Resend } from "resend";
 import { z } from "zod";
-import { env } from "@/env/server";
 import { EmailVerification } from "@/lib/emails/verification-email";
 
-const resend = new Resend(env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 export const sendEmailVerificationEmail = createServerFn({
 	method: "POST",

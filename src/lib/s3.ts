@@ -5,17 +5,16 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomUUID } from "crypto";
-import { env } from "@/env/server";
 
 const s3Client = new S3Client({
-	region: env.AWS_DEFAULT_REGION,
+	region: process.env.AWS_DEFAULT_REGION as string,
 	credentials: {
-		accessKeyId: env.AWS_ACCESS_KEY_ID,
-		secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+		accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
 	},
 });
 
-const BUCKET_NAME = env.AWS_BUCKET;
+const BUCKET_NAME = process.env.AWS_BUCKET as string;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -48,7 +47,7 @@ export async function generatePresignedUploadUrl(
 	return {
 		uploadUrl,
 		fileKey: filename,
-		publicUrl: `https://${BUCKET_NAME}.s3.${env.AWS_DEFAULT_REGION}.amazonaws.com/${filename}`,
+		publicUrl: `https://${BUCKET_NAME}.s3.${process.env.AWS_DEFAULT_REGION as string}.amazonaws.com/${filename}`,
 	};
 }
 
