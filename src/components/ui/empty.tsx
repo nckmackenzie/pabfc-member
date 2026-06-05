@@ -107,7 +107,7 @@ export {
 interface EmptyStateProps {
 	title: string;
 	description: string;
-	buttonText: string;
+	buttonText?: string;
 	buttonIcon?: React.ReactNode;
 	buttonVariant?: VariantProps<typeof buttonVariants>["variant"];
 	buttonAction?: () => void;
@@ -131,14 +131,16 @@ export function EmptyState({
 					<EmptyTitle>{title}</EmptyTitle>
 					<EmptyDescription>{description}</EmptyDescription>
 				</EmptyHeader>
-				<EmptyContent>
-					<div className="flex gap-2">
-						<Button variant={buttonVariant} onClick={buttonAction}>
-							{buttonIcon}
-							{buttonText}
-						</Button>
-					</div>
-				</EmptyContent>
+				{buttonText && (
+					<EmptyContent>
+						<div className="flex gap-2">
+							<Button variant={buttonVariant} onClick={buttonAction}>
+								{buttonIcon}
+								{buttonText}
+							</Button>
+						</div>
+					</EmptyContent>
+				)}
 			</Empty>
 		</div>
 	);
