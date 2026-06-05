@@ -13,7 +13,6 @@ import {
 	type SQL,
 	sql,
 } from "drizzle-orm";
-import { nanoid } from "nanoid";
 import { db } from "@/db";
 import {
 	members,
@@ -23,17 +22,13 @@ import {
 } from "@/drizzle/schema";
 import {
 	billingSettingsSchema,
-	paymentFormSchema,
 	paymentsValidateSearch,
 } from "@/features/payments/services/schema";
-import { NotFoundError } from "@/lib/error-handling/app-error";
 import {
 	dateFormat,
 	generateFullPaymentInvoiceNo,
 	normalizeDateRange,
-	taxCalculator,
 } from "@/lib/helpers";
-import { initiateMpesaStkPush } from "@/lib/mpesa";
 import { authMiddleware } from "@/middlewares/auth-middleware";
 
 export const getPlansAndPhoneNumber = createServerFn()
@@ -162,97 +157,3 @@ export const getPaymentNo = createServerFn()
 		);
 		return +rows[0].maxno + 1;
 	});
-
-export const initiateStkPushFn = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
-	.inputValidator(paymentFormSchema)
-	.handler(
-		async ({
-			data,
-			context: {
-				user: { id: userId },
-				memberId,
-			},
-		}) => {
-			const { contact, planId } = data;
-			const paymentNo = await getPaymentNo();
-			const settings = await db.query.settings.findFirst({
-				columns: { billing: true },
-			});
-
-			const billing = billingSettingsSchema.parse(settings?.billing ?? {});
-
-			const plan = await db.query.membershipPlans.findFirst({
-				where: eq(membershipPlans.id, planId),
-			});
-
-			if (!plan) {
-				throw new NotFoundError("Plan");
-			}
-
-			const amount = plan.price;
-
-			const accountReference = generateFullPaymentInvoiceNo(
-				paymentNo,
-				billing.invoicePrefix,
-				billing.invoiceNumberPadding,
-			);
-
-			const mpesaRes = await initiateMpesaStkPush({
-				amount,
-				phoneNumber: contact,
-				accountReference,
-				transactionDesc: "Membership Plan Payment",
-			});
-
-			const checkoutRequestId = mpesaRes.CheckoutRequestID;
-			const merchantRequestId = mpesaRes.MerchantRequestID;
-
-			const taxType = billing.applyTaxToMembership ? billing.vatType : "none";
-			const { amountExlusiveTax, taxAmount, totalInclusiveTax } = taxCalculator(
-				amount,
-				taxType,
-			);
-
-			const paymentId = await db.transaction(async (tx) => {
-				await tx.insert(mpesaStkRequests).values({
-					status: "pending",
-					amount: amount.toString(),
-					initiatedChannel: "portal",
-					memberId,
-					phoneNumber: contact,
-					checkoutRequestId,
-					merchantRequestId,
-				});
-
-				const [{ id }] = await tx
-					.insert(payments)
-					.values({
-						id: nanoid(),
-						amount: amount.toString(),
-						channel: "portal",
-						memberId,
-						lineTotal: amountExlusiveTax.toString(),
-						method: "mpesa_stk",
-						paymentNo: paymentNo.toString(),
-						totalAmount: totalInclusiveTax.toString(),
-						planId: plan.id,
-						externalReference: checkoutRequestId,
-						createdByUserId: userId,
-						vatType: taxType as "inclusive" | "exclusive" | "none",
-						taxAmount: taxAmount.toString(),
-					})
-					.returning({ id: payments.id });
-
-				return id;
-			});
-
-			return {
-				checkoutRequestId,
-				merchantRequestId,
-				customerMessage: mpesaRes.CustomerMessage,
-				responseDescription: mpesaRes.ResponseDescription,
-				paymentId,
-			};
-		},
-	);

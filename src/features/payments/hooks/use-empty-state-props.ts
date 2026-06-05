@@ -1,10 +1,6 @@
 import { useMemo } from "react";
 
-export function usePaymentsEmptyState(
-	hasFilters: boolean,
-	reset: () => void,
-	add: () => void,
-) {
+export function usePaymentsEmptyState(hasFilters: boolean, reset: () => void) {
 	return useMemo(
 		() =>
 			!hasFilters
@@ -12,7 +8,6 @@ export function usePaymentsEmptyState(
 						title: "No payments yet",
 						description: "Once you make a payment, it will appear here",
 						buttonText: "Make a Payment",
-						buttonAction: () => add(),
 					}
 				: {
 						title: "No payments found",
@@ -20,6 +15,6 @@ export function usePaymentsEmptyState(
 						buttonText: "Clear filters",
 						buttonAction: () => reset(),
 					},
-		[hasFilters, reset, add],
+		[hasFilters, reset],
 	);
 }
