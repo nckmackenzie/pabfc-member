@@ -8,7 +8,7 @@ import { authMiddleware } from "@/middlewares/auth-middleware";
 
 export const getCheckIns = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(checkInsValidateSearch)
+	.validator(checkInsValidateSearch)
 	.handler(async ({ data, context: { memberId } }) => {
 		const filters: Array<SQL> = [];
 

@@ -23,7 +23,7 @@ export const getUserSession = createServerFn({ method: "GET" }).handler(
 );
 
 export const getMemberId = createServerFn({ method: "GET" })
-	.inputValidator((userId: string) => userId)
+	.validator((userId: string) => userId)
 	.handler(async ({ data: userId }) => {
 		const member = await db.query.users.findFirst({
 			columns: { memberId: true },
