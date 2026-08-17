@@ -1,4 +1,4 @@
-import { useStore } from "@tanstack/react-form";
+import { useSelector } from "@tanstack/react-form";
 import type { ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,7 +57,7 @@ type TextFieldProps = {
 export function TextField({ label, placeholder, ...props }: TextFieldProps) {
 	const field = useFieldContext<string>();
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-	const errors = useStore(field.store, (state) => state.meta.errors);
+	const errors = useSelector(field.store, (state) => state.meta.errors);
 
 	return (
 		<Field data-invalid={isInvalid}>
@@ -87,7 +87,7 @@ export function PasswordTextField({
 }) {
 	const field = useFieldContext<string>();
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
-	const errors = useStore(field.store, (state) => state.meta.errors);
+	const errors = useSelector(field.store, (state) => state.meta.errors);
 
 	return (
 		<Field data-invalid={isInvalid}>
@@ -138,7 +138,7 @@ export function TextArea({
 	rows?: number;
 }) {
 	const field = useFieldContext<string>();
-	const errors = useStore(field.store, (state) => state.meta.errors);
+	const errors = useSelector(field.store, (state) => state.meta.errors);
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
@@ -167,7 +167,7 @@ export function Select({
 	placeholder?: string;
 }) {
 	const field = useFieldContext<string>();
-	const errors = useStore(field.store, (state) => state.meta.errors);
+	const errors = useSelector(field.store, (state) => state.meta.errors);
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
@@ -199,7 +199,7 @@ export function Select({
 
 export function Slider({ label }: { label: string }) {
 	const field = useFieldContext<number>();
-	const errors = useStore(field.store, (state) => state.meta.errors);
+	const errors = useSelector(field.store, (state) => state.meta.errors);
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (
@@ -219,7 +219,7 @@ export function Slider({ label }: { label: string }) {
 
 export function Switch({ label }: { label: string }) {
 	const field = useFieldContext<boolean>();
-	const errors = useStore(field.store, (state) => state.meta.errors);
+	const errors = useSelector(field.store, (state) => state.meta.errors);
 	const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
 	return (

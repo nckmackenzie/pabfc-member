@@ -60,7 +60,7 @@ export const getPlansAndPhoneNumber = createServerFn()
 
 export const getPayments = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator(paymentsValidateSearch)
+	.validator(paymentsValidateSearch)
 	.handler(async ({ data, context: { memberId } }) => {
 		const filters: Array<SQL> = [];
 
@@ -128,7 +128,7 @@ export const getPayments = createServerFn()
 
 export const getPaymentStatusFn = createServerFn()
 	.middleware([authMiddleware])
-	.inputValidator((checkoutRequestId: string) => checkoutRequestId)
+	.validator((checkoutRequestId: string) => checkoutRequestId)
 	.handler(async ({ data: checkoutRequestId, context: { memberId } }) => {
 		const payment = await db.query.mpesaStkRequests.findFirst({
 			where: and(

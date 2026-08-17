@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY as string);
 export const sendEmailVerificationEmail = createServerFn({
 	method: "POST",
 })
-	.inputValidator(
+	.validator(
 		z.object({
 			url: z.string(),
 			name: z.string(),

@@ -35,7 +35,7 @@ export const getUserInformation = createServerFn()
 	});
 
 export const completeRegistration = createServerFn({ method: "POST" })
-	.inputValidator(selfRegistrationFormSchema)
+	.validator(selfRegistrationFormSchema)
 	.handler(async ({ data }) => {
 		const { memberId, shortCode, ...rest } = data;
 		const registration = await db.query.memberRegistrationLinks.findFirst({
