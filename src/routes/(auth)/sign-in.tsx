@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { DumbbellIcon } from "lucide-react";
+import { CircleAlertIcon, DumbbellIcon } from "lucide-react";
 import { z } from "zod";
+import { Alert, AlertDescription, AlertTitle } from "@/components/reui/alert";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { sanitizeRedirect } from "@/hooks/use-previous-location";
 
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/(auth)/sign-in")({
 	component: RouteComponent,
 	validateSearch: z.object({
 		redirectTo: z.string().optional().catch("/payments"),
+		notice: z.literal("registration-link-used").optional().catch(undefined),
 	}),
 	head: () => ({
 		meta: [{ title: "Sign In / Prime Age Beauty & Fitness Center" }],
@@ -23,6 +25,7 @@ export const Route = createFileRoute("/(auth)/sign-in")({
 
 function RouteComponent() {
 	const { safeRedirectTo } = Route.useRouteContext();
+	const { notice } = Route.useSearch();
 	return (
 		<div className="bg-linear-to-r from-emerald-400 to-cyan-400 dark:bg-linear-to-r dark:from-emerald-900 dark:to-cyan-900 min-h-screen grid grid-cols-1 lg:grid-cols-2">
 			<div className="hidden lg:block p-6">
@@ -70,6 +73,16 @@ function RouteComponent() {
 							Enter your credentials to access your account.
 						</p>
 					</div>
+					{notice === "registration-link-used" && (
+						<Alert variant="warning">
+							<CircleAlertIcon />
+							<AlertTitle>Registration link already used</AlertTitle>
+							<AlertDescription>
+								Your account has already been registered. Please sign in
+								instead.
+							</AlertDescription>
+						</Alert>
+					)}
 					<LoginForm redirectTo={safeRedirectTo} />
 				</div>
 			</div>

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -16,10 +16,16 @@ const getRegistrationDetails = createServerFn()
 				where: eq(memberRegistrationLinks.shortCode, shortcode),
 			});
 
-			if (!linkDetails || linkDetails.usedAt) {
+			if (!linkDetails) {
 				throw new Error("Invalid registration link. Please contact support.");
 			}
 
+			if (linkDetails.usedAt) {
+				throw redirect({
+					to: "/sign-in",
+					search: { notice: "registration-link-used" },
+				});
+			}
 			const member = await db.query.members.findFirst({
 				columns: { lastName: true, firstName: true },
 				where: eq(members.id, linkDetails.memberId),
@@ -34,6 +40,7 @@ const getRegistrationDetails = createServerFn()
 				fullName: `${member.firstName} ${member.lastName}`,
 			};
 		} catch (error) {
+			if (isRedirect(error)) throw error;
 			console.error(error);
 			throw new Error("Invalid registration link. Please contact support.");
 		}
@@ -44,7 +51,9 @@ export const Route = createFileRoute("/register/$shortcode/")({
 	head: () => ({ meta: [{ title: "Self Registration / PABFC" }] }),
 	errorComponent: ({ error }) => (
 		<div className="py-4 md:py-6 flex justify-center">
-			<ErrorComponent message={error.message} />
+			<ErrorComponent
+				message={error instanceof Error ? error.message : "An error occurred."}
+			/>
 		</div>
 	),
 	loader: async ({ params: { shortcode } }) => {
