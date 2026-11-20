@@ -51,7 +51,9 @@ export const Route = createFileRoute("/register/$shortcode/")({
 	head: () => ({ meta: [{ title: "Self Registration / PABFC" }] }),
 	errorComponent: ({ error }) => (
 		<div className="py-4 md:py-6 flex justify-center">
-			<ErrorComponent message={error.message} />
+			<ErrorComponent
+				message={error instanceof Error ? error.message : "An error occurred."}
+			/>
 		</div>
 	),
 	loader: async ({ params: { shortcode } }) => {
